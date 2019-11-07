@@ -14,9 +14,9 @@ entity MEM_WB is
 			rdIn: in std_logic_vector(0 to 31);
 			rdOut: out	std_logic_vector(0 to 31) := "00000000000000000000000000000000";
 			
-			-- 32 bits para o  
-			addrIn: in	std_logic_vector(0 to 31);
-			addrOut: out std_logic_vector(0 to 31) := "00000000000000000000000000000000";
+			-- 32 bits para o endereço
+			endIn: in	std_logic_vector(0 to 31);
+			endOut: out std_logic_vector(0 to 31) := "00000000000000000000000000000000";
 			
 			-- 4 bits para o  
 			redDstIn: in std_logic_vector(0 to 4);
@@ -32,7 +32,7 @@ begin
 		if (clock'EVENT and clock = '1') then
 			wbOut 	<= wbIn;
 			rdOut <= rdIn;
-			addrOut <= addrIn;
+			endOut <= endIn;
 			redDstOut <= redDstIn;
 		end if;
 	end process;
