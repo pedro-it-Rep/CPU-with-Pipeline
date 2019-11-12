@@ -13,8 +13,7 @@ entity DataMemory is
 		-- Saída da memória
 		readData: out std_logic_vector(0 to 31);
 		
-		-- Para armazenar o conteúdo na memória
-		memoria: std_logic_vector(0 to 32);
+
 		
 		-- Sinais de controle
 		clock: in std_logic;
@@ -26,21 +25,24 @@ entity DataMemory is
 end DataMemory;
 
 architecture Data of DataMemory is
+	type memoria is array (0 to 31) of std_logic_vector(8 downto 0);
+	signal memory: memoria;
 begin
 	process(clock)
 	begin
 		if (clock'EVENT and clock = '1') then
 			-- Se MemWrite estiver ativo
 			if (memWrite = '1') then
-				memoria <= writeData;
+				memory(to_integer(unsigned(endereco))) <= writeData;
 			end if;
 			
 			-- Se MemRead estiver ativo
 			if (memRead = '1') then 
-				readData <= memoria;
+				memory(to_integer(unsigned(endereco))) <= writeData;
 			else 
-				read_data <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
+				readData <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
 			end if;
 		end if;
 	end process;
+	readData <= memory(to_integer(unsigned(endereco)));
 end Data;
