@@ -23,24 +23,26 @@ entity Registers is
 		-- Saída dos banco de registradores
 		readData1: out std_logic_vector(0 to 31);
 		readData2: out std_logic_vector(0 to 31);
-		
-		-- Recebe conteúdo de writeData
-		registrador: std_logic_vector(0 to 31);
+	
 		);
 
 end Registers;
 
 architecture reg of Registers is
+
+	type registrador is array (0 to 31) of std_logic_vector(0 to 31);
+	signal reg: registrador;
+	
 	begin
 		process(clock)
 		begin
 		-- Para conteúdo de writeData poder ser escrito em um registrador
 		if (clock'EVENT and clock = '1' and regWrite = '1' and not (writeRegister = "00000") ) then
-			registrador <= writeData;
+			reg(to_integer(unsigned(writeRegister))) <= writeData;
 		end if;
 	end process;
 	
-	readData1 <= readRegister1;
-	readData2 <= readRegister2;
+	readData1 <= reg(to_integer(unsigned(readRegister1)));
+	readData2 <= reg(to_integer(unsigned(readRegister2)));
 	
 end reg;
