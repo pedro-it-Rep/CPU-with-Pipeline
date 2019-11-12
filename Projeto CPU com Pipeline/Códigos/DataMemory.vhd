@@ -23,7 +23,7 @@ entity DataMemory is
 end DataMemory;
 
 architecture Data of DataMemory is
-	type memoria is array (0 to 31) of std_logic_vector(7 downto 0);
+	type memoria is array (0 to 63) of std_logic_vector(0 to 7);
 	signal memory: memoria;
 begin
 	
