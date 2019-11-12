@@ -18,11 +18,17 @@ end InstructionMemory;
 
 
 architecture Instructions of InstructionMemory is
+	
+	type instrucoes is array (0 to 447) of std_logic_vector(7 downto 0);
+	signal inst: instrucoes;
+	
 begin	
 	process(address)
 		begin
 			-- Saída recebe entrada
-			instruction <= endereco;
+			instrucao <= inst(to_integer(unsigned(endereco)))&
+						 inst(to_integer(unsigned(endereco)) +1)& 
+						 inst(to_integer(unsigned(endereco)) +2)&
+						 inst(to_integer(unsigned(endereco)) +3); 
 	end process;
-	
 end Instructions;
