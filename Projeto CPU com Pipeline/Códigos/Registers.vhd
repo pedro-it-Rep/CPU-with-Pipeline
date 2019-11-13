@@ -28,21 +28,21 @@ entity Registers is
 
 end Registers;
 
-architecture reg of Registers is
+architecture registrador of Registers is
 
 	type registrador is array (0 to 31) of std_logic_vector(0 to 31);
-	signal reg: registrador;
+	signal Testereg: registrador;
 	
 	begin
 		process(clock)
 		begin
 		-- Para conteúdo de writeData poder ser escrito em um registrador
 		if (clock'EVENT and clock = '1' and regWrite = '1' and not (writeRegister = "00000") ) then
-			reg(to_integer(unsigned(writeRegister))) <= writeData;
+			Testereg(to_integer(unsigned(writeRegister))) <= writeData;
 		end if;
 	end process;
 	
-	readData1 <= reg(to_integer(unsigned(readRegister1)));
-	readData2 <= reg(to_integer(unsigned(readRegister2)));
+	readData1 <= Testereg(to_integer(unsigned(readRegister1)));
+	readData2 <= Testereg(to_integer(unsigned(readRegister2)));
 	
-end reg;
+end registrador;

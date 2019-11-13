@@ -8,7 +8,7 @@ entity CPU is
 	port(clock:in std_logic; -- Controle das instruções
 			pcAtual:	out std_logic_vector(0 to 31); -- Responasel por mostrar o PC Atual
 			instrucAtual: out std_logic_vector(0 to 31); -- Contem a instrução que será executada
-			Reg:		out std_logic_vector(0 to 31));
+			Testereg:		out std_logic_vector(0 to 31));
 			
 end CPU;
 
