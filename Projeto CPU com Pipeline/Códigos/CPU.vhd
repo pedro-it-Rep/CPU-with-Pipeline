@@ -8,6 +8,7 @@ entity CPU is
 	port(clock:in std_logic; -- Controle das instruções
 			pcAtual:	out std_logic_vector(0 to 31); -- Responasel por mostrar o PC Atual
 			instrucAtual: out std_logic_vector(0 to 31); -- Contem a instrução que será executada
+			Reg:		out std_logic_vector(0 to 31));
 			
 end CPU;
 
@@ -35,7 +36,7 @@ architecture components of cpu is
 				writeData:			in  std_logic_vector(0 to 31);
 				readData1: 		out std_logic_vector(0 to 31);
 				readData2: 		out std_logic_vector(0 to 31);
-				registrador:		out std_logic_vector(0 to 31);
+				registrador:		out std_logic_vector(0 to 31));
 
 	end component;
 	
@@ -47,7 +48,7 @@ architecture components of cpu is
 				readData:	out std_logic_vector(0 to 31);
 				clock: 		in std_logic;
 				memWrite: 	in std_logic;
-				memRead: 	in 	std_logic;
+				memRead: 	in 	std_logic);
 
 	end component;
 	
@@ -81,7 +82,7 @@ architecture components of cpu is
 	end component;
 	
 	-- Declaração do PC, utilizado ao longo do programa
-	component program_counter is
+	component PC is
 		
 		port	(clock:	in  std_logic;
 				pc4:	in  std_logic_vector(0 to 31);
@@ -215,9 +216,9 @@ architecture components of cpu is
 		
 		port (opcode:	in  std_logic_vector(0 to 5);
 			PCSrc:		out std_logic;
-			SignalEX:			out std_logic_vector(0 to 3));
+			SignalEX:			out std_logic_vector(0 to 3);
 			SignalMEM:			out std_logic_vector(0 to 2);
-			SignalWB:			out std_logic_vector(0 to 1);
+			SignalWB:			out std_logic_vector(0 to 1));
 			
 	end component;
 	
@@ -347,16 +348,16 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Componentes Fetch Da Instrução
 	Instruction_Memory:	InstructionMemory port map (instrucaoPC, instrucao_IF_ID); -- OK
-	PC4:	AddBranch	port map (instrucaoPC, "00000000000000000000000000000100", SrcPC_0); -- OK
-	MuxBranch: Muxs_32bits port map (SinalBranch, SrcPC_0, SrcPC_1, verificaPC_0); -- OK
-	pc:	PC	port map (clock, atualizaPC, instrucaoPC); -- OK
+	PC4:	AddBranch	port map (instrucaoPC, "00000000000000000000000000000100", PCSrc_0); -- OK
+	MuxBranch: Muxs_32bits port map (SinalBranch, PCSrc_0, PCSrc_1, verificaPC_0); -- OK
+	ProgramCounter:	PC	port map (clock, atualizaPC, instrucaoPC); -- OK
 	
 	--------------------------------------------------------------------------------------------------
 	
 	--------------------------------------------------------------------------------------------------
 	-- Registrador IF/ID
 	
-		IFID:	IF_ID	port map (clock, SrcPC_0, PC_plus4, instrucao_IF_ID, instrucao); -- OK
+		Reg_IF_ID:	IF_ID	port map (clock, PCSrc_0, PC_plus4, instrucao_IF_ID, instrucao); -- OK
 		
 	--------------------------------------------------------------------------------------------------
 	
@@ -369,7 +370,7 @@ begin
 	Rt_ID					<= instrucao(11 to 15);
 	Rd_ID					<= instrucao(16 to 20);
 	
-	Registradores:	Registers	port map (RegWrite, clock, Read_Register_1, Read_Register_2, Write_Register, Write_Data, Read_Data_1, Read_Data_2, registrador); -- OK
+	Registradores:	Registers	port map (RegWrite, clock, Read_Register_1, Read_Register_2, Write_Register, Write_Data, Read_Data_1, Read_Data_2, Reg); -- OK
 	Sing_Extend:	SignExtend		port map (imed, imed_extended_ID); -- OK
 	MuxPCSrc:	Muxs_32bits	 port map (PCSrc, verificaPC_0, verificaPC_1, atualizaPC); -- OK
 	shift_jump:	ShiftLeft2 port map (instrucao, Jump_imed_x_quatro); -- OK
@@ -381,7 +382,7 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Registrador ID/EX
 	
-	ID_EX:	ID_EX	port map (clock, controle_WB_ID, controle_ME_ID, controle_EX_ID,
+	Reg_ID_EX:	ID_EX	port map (clock, controle_WB_ID, controle_ME_ID, controle_EX_ID,
 								controle_WB_EX, controle_ME_EX, controle_EX_EX, 
 								PC_plus4, PC_plus4_EX, Read_Data_1, ULA_Src_A,
 								Read_Data_2, ALUScr_0, imed_extended_ID, imediate_extended_EX,
@@ -395,7 +396,7 @@ begin
 	CalculoBranch:	AddBranch	port map (PC_plus4_EX, imed_ext_x_quatro, Branch_addr); -- OK
 	ALU: ULA	port map (ULA_Src_A, ULA_Src_B, ULA_Operation, ULA_Resultado, ULA_Zero); -- OK
 	MuxALUSrc:	Muxs_32bits	port map (ALUSrc, ALUScr_0, ALUScr_1, ULA_Src_B); -- OK
-	MuxRegDst:	MuxRegDst	port map (RegDst, regDst_0, regDst_1, regDst_Saida); -- OK
+	Mux_RegDst:	MuxRegDst	port map (RegDst, regDst_0, regDst_1, regDst_Saida); -- OK
 	ShiftEX: ShiftLeft2	port map (imediate_extended_EX, imed_ext_x_quatro); -- OK
 	
 	ALUScr_1 <= imediate_extended_EX;
@@ -412,9 +413,9 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Registrador EX/MEM
 
-	EX_MEM:	EX_MEM	port map (clock, controle_WB_EX, controle_ME_EX,
+	Reg_EX_MEM:	EX_MEM	port map (clock, controle_WB_EX, controle_ME_EX,
 								controle_WB_ME, controle_ME_ME,
-								Branch_addr, SrcPC_1, ULA_Zero, andBranch_1,
+								Branch_addr, PCSrc_1, ULA_Zero, andBranch_1,
 								ULA_Resultado, endereco_MEM, ALUScr_0, writeData_MEM,
 								regDst_Saida, regDst_MEM); -- OK
 												
@@ -423,7 +424,7 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Declaração dos componentes da Memoria de Dados
 	
-	DataMemory: DataMemory port map (endereco_MEM, writeData_MEM, readData_MEM, clock, memWrite, memRead); -- OK
+	Data_Memory: DataMemory port map (endereco_MEM, writeData_MEM, readData_MEM, clock, memWrite, memRead); -- OK
 	
 	memWrite <= controle_ME_ME(0);
 	memRead <= controle_ME_ME(1);
@@ -434,7 +435,7 @@ begin
 	
 	--------------------------------------------------------------------------------------------------
 	-- Registrador MEM/WB
-	MEM_WB:	MEM_WB	port map (clock, controle_WB_ME, controle_WB_WB,
+	Reg_MEM_WB:	MEM_WB	port map (clock, controle_WB_ME, controle_WB_WB,
 								readData_MEM, memtoreg_mux_1,
 								endereco_MEM, memtoreg_mux_0, regDst_MEM, Write_Register); -- OK
 	

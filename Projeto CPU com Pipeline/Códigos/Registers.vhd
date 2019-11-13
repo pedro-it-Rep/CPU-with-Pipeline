@@ -22,7 +22,7 @@ entity Registers is
 		
 		-- Saída dos banco de registradores
 		readData1: out std_logic_vector(0 to 31);
-		readData2: out std_logic_vector(0 to 31);
+		readData2: out std_logic_vector(0 to 31)
 	
 		);
 

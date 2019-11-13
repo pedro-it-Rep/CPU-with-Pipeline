@@ -13,13 +13,13 @@ entity UnidadeControle is
 		PCSrc: out std_logic := '0';
 		
 		-- Sinal de controle para o estáio de EX
-		SignalEX:	out std_logic_vector(0 to 3) := "0000"
+		SignalEX:	out std_logic_vector(0 to 3) := "0000";
 		
 		-- Sinal de controle para o estágio de MEM
 		SignalMEM: out std_logic_vector(0 to 2) := "000";
 		
 		-- Sinal de controle para o estágio de WB
-		SignalWB:	out std_logic_vector(0 to 1) := "00";
+		SignalWB:	out std_logic_vector(0 to 1) := "00"
 		);
 		
 end UnidadeControle;
