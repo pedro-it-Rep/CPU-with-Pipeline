@@ -35,8 +35,8 @@ architecture components of cpu is
 				writeRegister:	in  std_logic_vector(0 to 4);
 				writeData:			in  std_logic_vector(0 to 31);
 				readData1: 		out std_logic_vector(0 to 31);
-				readData2: 		out std_logic_vector(0 to 31);
-				registrador:		out std_logic_vector(0 to 31));
+				readData2: 		out std_logic_vector(0 to 31));
+				--registrador:		out std_logic_vector(0 to 31));
 
 	end component;
 	
@@ -53,7 +53,7 @@ architecture components of cpu is
 	end component;
 	
 	-- Declaração do somador responsavel por calcular o Branch se necessario
-	component AddBranch
+	component AdderBranch
 		
 		port	(entrada1:	in  std_logic_vector(0 to 31);
 				entrada2:		in  std_logic_vector(0 to 31);
@@ -172,9 +172,9 @@ architecture components of cpu is
 		
 		port (clock:	in		std_logic;
 			entradaWB:		in		std_logic_vector(0 to 1);
-			entradaME:		in		std_logic_vector(0 to 2);
+			entradaMEM:		in		std_logic_vector(0 to 2);
 			saidaWB:		out	std_logic_vector(0 to 1);
-			saidaME:		out	std_logic_vector(0 to 2);
+			saidaMEM:		out	std_logic_vector(0 to 2);
 			
 			entradaPC:		in		std_logic_vector(0 to 31);
 			saidaPC:		out	std_logic_vector(0 to 31);
@@ -348,7 +348,7 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Componentes Fetch Da Instrução
 	Instruction_Memory:	InstructionMemory port map (instrucaoPC, instrucao_IF_ID); -- OK
-	PC4:	AddBranch	port map (instrucaoPC, "00000000000000000000000000000100", PCSrc_0); -- OK
+	PC4:	AdderBranch	port map (instrucaoPC, "00000000000000000000000000000100", PCSrc_0); -- OK
 	MuxBranch: Muxs_32bits port map (SinalBranch, PCSrc_0, PCSrc_1, verificaPC_0); -- OK
 	ProgramCounter:	PC	port map (clock, atualizaPC, instrucaoPC); -- OK
 	
@@ -370,7 +370,7 @@ begin
 	Rt_ID					<= instrucao(11 to 15);
 	Rd_ID					<= instrucao(16 to 20);
 	
-	Registradores:	Registers	port map (RegWrite, clock, Read_Register_1, Read_Register_2, Write_Register, Write_Data, Read_Data_1, Read_Data_2, Reg); -- OK
+	Registradores:	Registers	port map (RegWrite, clock, Read_Register_1, Read_Register_2, Write_Register, Write_Data, Read_Data_1, Read_Data_2); -- OK
 	Sing_Extend:	SignExtend		port map (imed, imed_extended_ID); -- OK
 	MuxPCSrc:	Muxs_32bits	 port map (PCSrc, verificaPC_0, verificaPC_1, atualizaPC); -- OK
 	shift_jump:	ShiftLeft2 port map (instrucao, Jump_imed_x_quatro); -- OK
@@ -393,7 +393,7 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Componentes necessarios para a execução do programa
 	
-	CalculoBranch:	AddBranch	port map (PC_plus4_EX, imed_ext_x_quatro, Branch_addr); -- OK
+	CalculoBranch:	AdderBranch	port map (PC_plus4_EX, imed_ext_x_quatro, Branch_addr); -- OK
 	ALU: ULA	port map (ULA_Src_A, ULA_Src_B, ULA_Operation, ULA_Resultado, ULA_Zero); -- OK
 	MuxALUSrc:	Muxs_32bits	port map (ALUSrc, ALUScr_0, ALUScr_1, ULA_Src_B); -- OK
 	Mux_RegDst:	MuxRegDst	port map (RegDst, regDst_0, regDst_1, regDst_Saida); -- OK
@@ -436,15 +436,15 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Registrador MEM/WB
 	Reg_MEM_WB:	MEM_WB	port map (clock, controle_WB_ME, controle_WB_WB,
-								readData_MEM, memtoreg_mux_1,
-								endereco_MEM, memtoreg_mux_0, regDst_MEM, Write_Register); -- OK
+								readData_MEM, memtoReg_mux1,
+								endereco_MEM, memtoReg_mux0, regDst_MEM, Write_Register); -- OK
 	
 	--------------------------------------------------------------------------------------------------
 	
 	--------------------------------------------------------------------------------------------------
 	-- Declaração do funcionamento do WriteBack
 	
-	MuxMEMtoReg:	MUXs_32bits	port map	(MemToReg, memtoreg_mux_0, memtoreg_mux_1, Write_Data); -- OK
+	MuxMEMtoReg:	MUXs_32bits	port map	(MemToReg, memtoReg_mux0, memtoReg_mux1, Write_Data); -- OK
 	
 	MemToReg <= controle_WB_WB(0);
 	RegWrite <= controle_WB_WB(1);

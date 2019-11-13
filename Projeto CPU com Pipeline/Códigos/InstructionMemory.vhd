@@ -23,6 +23,13 @@ architecture Instructions of InstructionMemory is
 	signal inst: instrucoes;
 	
 begin	
+
+			inst(0) <= "00001100";
+			inst(1) <= "00000010";
+			inst(2) <= "00000000";
+			inst(3) <= "00000101";
+	
+	
 	process(endereco)
 		begin
 			-- Saída recebe entrada

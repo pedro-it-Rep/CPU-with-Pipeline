@@ -10,9 +10,9 @@ entity EX_MEM is
 			
 			-- Declaração da Entrada e Saida do WB e ME
 			entradaWB: in std_logic_vector(0 to 1);
-			entradaME: in std_logic_vector(0 to 2);
+			entradaMEM: in std_logic_vector(0 to 2);
 			saidaWB: out std_logic_vector(0 to 1) := "00";
-			saidaME: out std_logic_vector(0 to 2) := "000";
+			saidaMEM: out std_logic_vector(0 to 2) := "000";
 			
 			-- Entrada e Saido do PC, responavel pela instrução/proxima instrução
 			entradaPC: in std_logic_vector(0 to 31);

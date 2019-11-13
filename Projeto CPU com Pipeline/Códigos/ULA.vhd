@@ -24,9 +24,9 @@ entity ULA is
 end ULA;
 
 architecture UnidadeLogArit of ULA is 
-	-- signal conta: std_logic_vector(0 to 31);
+	 signal conta: std_logic_vector(0 to 31);
 begin
-	process(regA, regB, op)
+	process(aluSrcA, aluSrcB, aluOp)
 	begin
 		case aluOp is
 			
@@ -38,12 +38,12 @@ begin
 			
 		end case;
 		
-		if(res = "00000000000000000000000000000000") then
+		if(conta = "00000000000000000000000000000000") then
 			zero <= '1';
 		else
 			zero <= '0';
 		end if;
 		
-		-- aluResult <= res;
+		 aluResult <= conta;
 	end process;
 end UnidadeLogArit;
