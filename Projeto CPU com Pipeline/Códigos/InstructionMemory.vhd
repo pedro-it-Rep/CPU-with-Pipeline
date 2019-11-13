@@ -23,12 +23,37 @@ architecture Instructions of InstructionMemory is
 	signal inst: instrucoes;
 	
 begin	
-
-			inst(0) <= "00001100";
-			inst(1) <= "00000010";
-			inst(2) <= "00000000";
-			inst(3) <= "00000101";
-	
+			-- Addi: Reg1, 0, 7
+			inst(0) <= "00001100"; 
+			inst(1) <= "00000001"; 
+			inst(2) <= "00000000"; 
+			inst(3) <= "00000111"; 
+			
+			--Addi: Reg2, 0, 3
+			inst(4) <= "00001100"; 
+			inst(5) <= "00000010"; 
+			inst(6) <= "00000000"; 
+			inst(7) <= "00000011";
+			
+			--Addi: Reg3, 0, 5
+			inst(8) <= "00001100"; 
+			inst(9) <= "00000011"; 
+			inst(10) <= "00000000"; 
+			inst(11) <= "00000101";
+			
+			--Addi: Reg4, 0, 6
+			inst(12) <= "00001100"; 
+			inst(13) <= "00000100"; 
+			inst(14) <= "00000000"; 
+			inst(15) <= "00000110";
+			
+			-- Add: Reg1, Reg2, Reg3
+			inst(16) <= "00000100"; 
+			inst(17) <= "01000011";
+			inst(18) <= "00001000";
+			inst(19) <= "00000000";
+			
+			--Sub: Reg4, Reg3, Reg2
 	
 	process(endereco)
 		begin
