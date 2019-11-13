@@ -23,7 +23,7 @@ architecture Instructions of InstructionMemory is
 	signal inst: instrucoes;
 	
 begin	
-	process(address)
+	process(endereco)
 		begin
 			-- Saída recebe entrada
 			instrucao <= inst(to_integer(unsigned(endereco)))&

@@ -26,7 +26,7 @@ entity ID_EX is
 			
 			-- Declaração da Entrada e Saida do dado 2
 			entrada_ReadData2: in std_logic_vector(0 to 31);
-			saida_ReadData1: out std_logic_vector(0 to 31) := "00000000000000000000000000000000";
+			saida_ReadData2: out std_logic_vector(0 to 31) := "00000000000000000000000000000000";
 			
 			-- Entrada e Saida do imediato
 			entrada_imed: in std_logic_vector(0 to 31);
@@ -52,7 +52,7 @@ begin
 			saidaEX <= entradaEX;
 			saidaPC <= entradaPC;
 			saida_ReadData1	<= entrada_ReadData1;
-			saida_ReadData1	<= entrada_ReadData2;
+			saida_ReadData2	<= entrada_ReadData2;
 			saida_imed <= entrada_imed;
 			saidaRT <= entradaRT;
 			saidaRD <= entradaRD;

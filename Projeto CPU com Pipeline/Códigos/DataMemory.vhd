@@ -16,9 +16,7 @@ entity DataMemory is
 		-- Sinais de controle
 		clock: in std_logic;
 		memWrite: in std_logic;
-		memRead: in std_logic;
-
-		);
+		memRead: in std_logic);
 		
 end DataMemory;
 
@@ -32,9 +30,9 @@ begin
 		if (clock'EVENT and clock = '1') then
 			-- Se MemWrite estiver ativo
 			if (memWrite = '1') then
-				memory(to_integer(unsigned(endereco))) <= writeData(0 to 7)&
-				memory(to_integer(unsigned(endereco)) +1) <= writeData(8 to 15)&
-				memory(to_integer(unsigned(endereco)) +2) <= writeData(16 to 23)&
+				memory(to_integer(unsigned(endereco))) <= writeData(0 to 7);
+				memory(to_integer(unsigned(endereco)) +1) <= writeData(8 to 15);
+				memory(to_integer(unsigned(endereco)) +2) <= writeData(16 to 23);
 				memory(to_integer(unsigned(endereco)) +3) <= writeData(24 to 31);
 			end if;
 			

@@ -23,8 +23,8 @@ begin
 	process(clock)
 		begin
 			if (clock'EVENT and clock = '1') then
-				out_instr <= in_instr;
-				out_pc <= in_pc;
+				pcOut <= pcIn;
+				InstructionOut <= InstructionIn;
 			end if;
 	end process;
 end IFID;

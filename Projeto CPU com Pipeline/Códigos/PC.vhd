@@ -14,7 +14,7 @@ end PC;
 
 architecture PC4 of PC is
 begin 
-	process (clock, pc_upd)
+	process (clock, pc4)
 		begin
 			if (clock'event and clock = '1') then
 				-- Realiza PC+4
