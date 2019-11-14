@@ -28,15 +28,15 @@ architecture components of cpu is
 	-- Declaração dos registradores usados pelo programa
 	component Registers
 	
-		port	(regWrite: in std_logic;
+		port	(
 				clock: in std_logic;
+				regWrite: in std_logic;
 				readRegister1:	in  std_logic_vector(0 to 4);
 				readRegister2:	in  std_logic_vector(0 to 4);
 				writeRegister:	in  std_logic_vector(0 to 4);
 				writeData:			in  std_logic_vector(0 to 31);
 				readData1: 		out std_logic_vector(0 to 31);
 				readData2: 		out std_logic_vector(0 to 31));
-				--registrador:		out std_logic_vector(0 to 31));
 
 	end component;
 	
@@ -258,8 +258,8 @@ architecture components of cpu is
 	signal imed:				std_logic_vector(0 to 15); -- Sinal Imediato para as operações
 	signal imed_extended_ID:	std_logic_vector(0 to 31); -- Imediato extendido para operação
 	
-	signal Jump_imed_x_quatro:	std_logic_vector(0 to 31); -- ?
-	signal JumpType:			std_logic; -- ?
+	--signal Jump_imed_x_quatro:	std_logic_vector(0 to 31); -- ?
+	--signal JumpType:			std_logic; -- ?
 	
 	signal Rt_ID:				std_logic_vector(0 to 4); -- Entrada do RT no registrador ID
 	signal Rd_ID:				std_logic_vector(0 to 4); -- Entrada do RD no registrador ID
@@ -370,10 +370,10 @@ begin
 	Rt_ID					<= instrucao(11 to 15);
 	Rd_ID					<= instrucao(16 to 20);
 	
-	Registradores:	Registers	port map (RegWrite, clock, Read_Register_1, Read_Register_2, Write_Register, Write_Data, Read_Data_1, Read_Data_2); -- OK
+	Registradores:	Registers	port map (clock, RegWrite, Read_Register_1, Read_Register_2, Write_Register, Write_Data, Read_Data_1, Read_Data_2); -- OK
 	Sing_Extend:	SignExtend		port map (imed, imed_extended_ID); -- OK
 	MuxPCSrc:	Muxs_32bits	 port map (PCSrc, verificaPC_0, verificaPC_1, atualizaPC); -- OK
-	shift_jump:	ShiftLeft2 port map (instrucao, Jump_imed_x_quatro); -- OK
+	--shift_jump:	ShiftLeft2 port map (instrucao, Jump_imed_x_quatro); -- OK
 	
 	ControlUnity: UnidadeControle port map (OPCode, PCSrc, controle_EX_ID, controle_ME_ID, controle_WB_ID); -- OK
 	
@@ -444,8 +444,8 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Declaração do funcionamento do WriteBack
 	
-	MuxMEMtoReg:	MUXs_32bits	port map	(MemToReg, memtoReg_mux0, memtoReg_mux1, Write_Data); -- OK
+	MuxMEMtoReg:	MUXs_32bits	port map	(memToReg, memtoReg_mux0, memtoReg_mux1, Write_Data); -- OK
 	
-	MemToReg <= controle_WB_WB(0);
+	memToReg <= controle_WB_WB(0);
 	RegWrite <= controle_WB_WB(1);
 end;

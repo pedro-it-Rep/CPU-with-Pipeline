@@ -23,29 +23,7 @@ architecture Instructions of InstructionMemory is
 	signal inst: instrucoes;
 	
 begin	
-			-- OPCODE DAS INSTRUÇÕES
-			
-			-- NOP:		000000
-			
-			-- ADD:		000001 (OK)
-			-- SUB:		000010 (OK)
-			-- ADDI:	000011 (OK)
-			-- SUBI:	000011 (OK)
-			
-			-- LW:		000101
-			-- SW:		000110
-			
-			-- AND:		000111
-			-- ANDI:	001000
-			-- OR:		001001
-			-- ORI:		001010
-			
-			-- BEQ:		001011
-			
-			-- J:		------
-			-- JR:		------
-			
-			-- Addi: Reg1, 0, 7
+			-- Addi: Reg1, 0, 7 -- 000011 - OPCode || 00000 - Reg1 || 00001 - Reg2 || 0000000000000111 - Imed
 			inst(0) <= "00001100"; 
 			inst(1) <= "00000001"; 
 			inst(2) <= "00000000"; 
@@ -81,12 +59,7 @@ begin
 			inst(22) <= "00100000";
 			inst(23) <= "00000000";
 			
-			--Subi: Reg2, 0, 1
-			inst(24) <= "00010000"; 
-			inst(25) <= "00000010";
-			inst(26) <= "00000000";
-			inst(27) <= "00000001";
-			
+			--
 	
 	process(endereco)
 		begin
