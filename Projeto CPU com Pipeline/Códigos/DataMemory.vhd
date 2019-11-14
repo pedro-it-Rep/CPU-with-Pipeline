@@ -39,9 +39,9 @@ begin
 			-- Se MemRead estiver ativo
 			if (memRead = '1') then 
 			readData <= memory(to_integer(unsigned(endereco)))&
-						memory(to_integer(unsigned(endereco)) +1)&
-						memory(to_integer(unsigned(endereco)) +2)&
-						memory(to_integer(unsigned(endereco)) +3);
+							memory(to_integer(unsigned(endereco)) +1)&
+							memory(to_integer(unsigned(endereco)) +2)&
+							memory(to_integer(unsigned(endereco)) +3);
 			else 
 				readData <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
 			end if;
