@@ -40,8 +40,8 @@ end Registers;
 architecture registrador of Registers is
 
 	-- 10 registradores de 32 bits
-	type registrador is array (0 to 9) of std_logic_vector(0 to 31);
-	signal Testereg: registrador;
+	type RegArray is array (0 to 9) of std_logic_vector(0 to 31);
+	signal Testereg: RegArray;
 	
 	begin
 	
