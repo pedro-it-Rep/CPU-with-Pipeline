@@ -20,6 +20,7 @@ entity DataMemory is
 		
 end DataMemory;
 
+
 architecture Data of DataMemory is
 	type memoria is array (0 to 63) of std_logic_vector(0 to 7);
 	signal memory: memoria;
@@ -39,9 +40,9 @@ begin
 			-- Se MemRead estiver ativo
 			if (memRead = '1') then 
 			readData <= memory(to_integer(unsigned(endereco)))&
-							memory(to_integer(unsigned(endereco)) +1)&
-							memory(to_integer(unsigned(endereco)) +2)&
-							memory(to_integer(unsigned(endereco)) +3);
+							memory(to_integer(unsigned(endereco)) + 1)&
+							memory(to_integer(unsigned(endereco)) + 2)&
+							memory(to_integer(unsigned(endereco)) + 3);
 			else 
 				readData <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
 			end if;

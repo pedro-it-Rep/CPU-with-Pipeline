@@ -4,9 +4,8 @@ use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 
 entity IF_ID is
-	port(clock: in	std_logic;
-	
-		-- Não há sinais de controle nessa etapa
+	port(
+		clock: in	std_logic;
 		
 		-- 32 bits para o PC
 		pcIn: in std_logic_vector(0 to 31);
@@ -14,7 +13,8 @@ entity IF_ID is
 			
 		-- 32 bits para a instrução
 		InstructionIn:	in std_logic_vector(0 to 31);
-		InstructionOut:	out std_logic_vector(0 to 31) := "00000000000000000000000000000000");
+		InstructionOut:	out std_logic_vector(0 to 31) := "00000000000000000000000000000000"
+		);
 		
 end IF_ID;
 
@@ -27,4 +27,4 @@ begin
 				pcOut <= pcIn;
 			end if;
 	end process;
-end IFID;
+end;

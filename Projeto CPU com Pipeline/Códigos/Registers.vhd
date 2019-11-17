@@ -57,7 +57,7 @@ architecture registrador of Registers is
 		process(clock)
 		begin
 		-- Para conteúdo de writeData poder ser escrito em um registrador
-		if (clock'EVENT and clock = '1' and regWrite = '1' and not (writeRegister = "00000") ) then
+		if (clock'event and clock = '1' and regWrite = '1' and not (writeRegister = "00000")) then
 			Testereg(to_integer(unsigned(writeRegister))) <= writeData;
 		end if;
 	end process;

@@ -6,17 +6,17 @@ use ieee.numeric_std.all;
 -- Declaração das variaveis no CPU
 entity CPU is
 	port(
-				clock: in std_logic; -- Controle das instruções
-				pcAtual: out std_logic_vector(0 to 31); -- Responasel por mostrar o PC Atual
-				instrucAtual: out std_logic_vector(0 to 31); -- Contem a instrução que será executada
-				SaidaReg1: out std_logic_vector(0 to 31);
-				SaidaReg2: out std_logic_vector(0 to 31);
-				SaidaReg3: out std_logic_vector(0 to 31);
-				SaidaReg4: out std_logic_vector(0 to 31);
-				SaidaReg5: out std_logic_vector(0 to 31);
-				SaidaReg6: out std_logic_vector(0 to 31);
-				SaidaReg7: out std_logic_vector(0 to 31);
-				SaidaReg8: out std_logic_vector(0 to 31)
+			clock: in std_logic; -- Controle das instruções
+			pcAtual: out std_logic_vector(0 to 31); -- Responasel por mostrar o PC Atual
+			instrucAtual: out std_logic_vector(0 to 31); -- Contem a instrução que será executada
+			SaidaReg1: out std_logic_vector(0 to 31);
+			SaidaReg2: out std_logic_vector(0 to 31);
+			SaidaReg3: out std_logic_vector(0 to 31);
+			SaidaReg4: out std_logic_vector(0 to 31);
+			SaidaReg5: out std_logic_vector(0 to 31);
+			SaidaReg6: out std_logic_vector(0 to 31);
+			SaidaReg7: out std_logic_vector(0 to 31);
+			SaidaReg8: out std_logic_vector(0 to 31)
 		);
 			
 end CPU;
@@ -24,131 +24,144 @@ end CPU;
 	-- Declaração dos componentes utilizados durante a execução do pipeline
 architecture components of CPU is
 
-	--OBS: Explicação aprofundada de cada componente se encontra no proprio arquivo do componente
-
-	-- Declaração da Memoria de Instruções, responsavel por obter as instruções do programa
-	component InstructionMemory
+	--OBS: Explicação de cada componente se encontra no proprio arquivo do componente
 	
-		port (endereco: in std_logic_vector(0 to 31);
-				instrucao: out std_logic_vector(0 to 31));
-				
-	end component;
-	
-	-- Declaração dos registradores usados pelo programa
-	component Registers
-	
-		port(
-			clock: in std_logic;
-			regWrite: in std_logic;
-			readRegister1: in std_logic_vector(0 to 4);
-			readRegister2: in std_logic_vector(0 to 4);
-			writeRegister: in std_logic_vector(0 to 4);
-			writeData: in std_logic_vector(0 to 31);
-			readData1: out std_logic_vector(0 to 31);
-			readData2: out std_logic_vector(0 to 31);
-			register1: out std_logic_vector(0 to 31);
-			register2: out std_logic_vector(0 to 31);
-			register3: out std_logic_vector(0 to 31);
-			register4: out std_logic_vector(0 to 31);
-			register5: out std_logic_vector(0 to 31);
-			register6: out std_logic_vector(0 to 31);
-			register7: out std_logic_vector(0 to 31);
-			register8: out std_logic_vector(0 to 31)
-			);
-
-	end component;
-	
-	-- Declaração da memoria de Dados
-	component DataMemory
-		
-		port(	
-			endereco: in std_logic_vector(0 to 31);
-			writeData: in std_logic_vector(0 to 31);
-			readData: out std_logic_vector(0 to 31);
-			clock: in std_logic;
-			memWrite: in std_logic;
-			memRead: in std_logic
-			);
-
-	end component;
-	
-	-- Declaração do somador responsavel por calcular o Branch se necessario
-	component AdderBranch
-		
-		port(
-			entrada1: in std_logic_vector(0 to 31);
-			entrada2: in std_logic_vector(0 to 31);
-			saidaAdder: out std_logic_vector(0 to 31)
-			);
-				
-	end component;
-	
-	-- Declaração do multiplexador de 32 bits de forma generica, para multiplos usos ao longo do programa
-	component Muxs_32bits is
-		
-		port(
-			sinalControle: in std_logic;
-			entrada1: in std_logic_vector(0 to 31);
-			entrada2: in std_logic_vector(0 to 31);
-			saidaMux32: out std_logic_vector(0 to 31)
-			);
-				
-	end component;
-	
-	-- Declaração do multiplexador usado para o controle do RegDst
-	component MuxRegDst is
-		
-		port(
-			regDst: in std_logic;
-			regRt: in std_logic_vector(0 to 4);
-			regRd: in std_logic_vector(0 to 4);
-			saidaMux: out std_logic_vector(0 to 4)
-			);
-				
-	end component;
 	
 	-- Declaração do PC, utilizado ao longo do programa
 	component PC is
 		
 		port(
-			clock: in std_logic;
-			pc4: in std_logic_vector(0 to 31);
-			pc: out std_logic_vector(0 to 31)
-			);
+				clock: in std_logic;
+				pc4: in std_logic_vector(0 to 31);
+				pc: out std_logic_vector(0 to 31)
+			 );
 				
 	end component;
 	
-	-- Declaração do sinal extendido, necessario para o bom funcionamento do pipeline
-	component SignExtend is
-		
-		port(
-			entradaSE: in std_logic_vector(0 to 15);
-			saidaSE:	out std_logic_vector(0 to 31)
-			);
-				 
+	
+	-- Declaração da Memoria de Instruções, responsavel por obter as instruções do programa
+	component InstructionMemory
+	
+		port (
+				endereco: in std_logic_vector(0 to 31);
+				instrucao: out std_logic_vector(0 to 31)	
+				);
+				
 	end component;
 	
-	-- Declaração do shitf left 2, para o programa apenas é necessario mover 2 bits
-	component ShiftLeft2 is
-		
+	
+	-- Declaração dos registradores usados pelo programa
+	component Registers
+	
 		port(
-			entradaSHL: in std_logic_vector(0 to 31);
-			saidaSHL: out std_logic_vector(0 to 31)
+				clock: in std_logic;
+				regWrite: in std_logic;
+				readRegister1: in std_logic_vector(0 to 4);
+				readRegister2: in std_logic_vector(0 to 4);
+				writeRegister: in std_logic_vector(0 to 4);
+				writeData: in std_logic_vector(0 to 31);
+				readData1: out std_logic_vector(0 to 31);
+				readData2: out std_logic_vector(0 to 31);
+				register1: out std_logic_vector(0 to 31);
+				register2: out std_logic_vector(0 to 31);
+				register3: out std_logic_vector(0 to 31);
+				register4: out std_logic_vector(0 to 31);
+				register5: out std_logic_vector(0 to 31);
+				register6: out std_logic_vector(0 to 31);
+				register7: out std_logic_vector(0 to 31);
+				register8: out std_logic_vector(0 to 31)
 			);
-				 
+
 	end component;
+	
+	
+	-- Declaração da memoria de Dados
+	component DataMemory
+		
+		port(	
+				endereco: in std_logic_vector(0 to 31);
+				writeData: in std_logic_vector(0 to 31);
+				readData: out std_logic_vector(0 to 31);
+				clock: in std_logic;
+				memWrite: in std_logic;
+				memRead: in std_logic
+			);
+
+	end component;
+	
 	
 	-- Declaração da unidade Logica e Aritmetica, responsavel pelas operações necessarias durante o programa
 	component ULA is
 		
 		port(
-			aluSrcA: in std_logic_vector(0 to 31);
-			aluSrcB: in std_logic_vector(0 to 31);
-			aluOp: in std_logic_vector(0 to  1);
-			aluResult: out std_logic_vector(0 to 31);
-			zero: out std_logic
+				aluSrcA: in std_logic_vector(0 to 31);
+				aluSrcB: in std_logic_vector(0 to 31);
+				aluOp: in std_logic_vector(0 to  1);
+				aluResult: out std_logic_vector(0 to 31);
+				zero: out std_logic
 			);
 				
+	end component;
+	
+	
+	-- Declaração do somador responsavel por calcular o Branch se necessario
+	component AdderBranch
+		
+		port(
+				entrada1: in std_logic_vector(0 to 31);
+				entrada2: in std_logic_vector(0 to 31);
+				saidaAdder: out std_logic_vector(0 to 31)
+			);
+				
+	end component;
+	
+	
+	-- Declaração do multiplexador de 32 bits de forma generica, para multiplos usos ao longo do programa
+	component Muxs_32bits is
+		
+		port(
+				sinalControle: in std_logic;
+				entrada1: in std_logic_vector(0 to 31);
+				entrada2: in std_logic_vector(0 to 31);
+				saidaMux32: out std_logic_vector(0 to 31)
+			);
+				
+	end component;
+	
+	
+	-- Declaração do multiplexador usado para o controle do RegDst
+	component MuxRegDst is
+		
+		port(
+				regDst: in std_logic;
+				regRt: in std_logic_vector(0 to 4);
+				regRd: in std_logic_vector(0 to 4);
+				saidaMux: out std_logic_vector(0 to 4)
+			);
+				
+	end component;
+	
+	
+	
+	-- Declaração do sinal extendido, necessario para o bom funcionamento do pipeline
+	component SignExtend is
+		
+		port(
+				entradaSE: in std_logic_vector(0 to 15);
+				saidaSE:	out std_logic_vector(0 to 31)
+			 );
+				 
+	end component;
+	
+	
+	-- Declaração do shitf left 2, para o programa apenas é necessario mover 2 bits
+	component ShiftLeft2 is
+		
+		port(
+				entradaSHL: in std_logic_vector(0 to 31);
+				saidaSHL: out std_logic_vector(0 to 31)
+			);
+				 
 	end component;
 	
 	
@@ -162,11 +175,11 @@ architecture components of CPU is
 		component IF_ID is
 		
 		port(
-			clock: in std_logic;
-			pcIn: in std_logic_vector(0 to 31);
-			pcOut: out std_logic_vector(0 to 31);
-			InstructionIn:	in std_logic_vector(0 to 31);
-			InstructionOut: out std_logic_vector(0 to 31)
+				clock: in std_logic;
+				pcIn: in std_logic_vector(0 to 31);
+				pcOut: out std_logic_vector(0 to 31);
+				InstructionIn:	in std_logic_vector(0 to 31);
+				InstructionOut: out std_logic_vector(0 to 31)
 			);
 			
 	end component;
@@ -175,83 +188,91 @@ architecture components of CPU is
 		component ID_EX is
 		
 		port(
-			clock: in std_logic;
-			entradaWB: in std_logic_vector(0 to 1);
-			entradaMEM: in std_logic_vector(0 to 2);
-			entradaEX: in std_logic_vector(0 to 3);
-			saidaWB: out std_logic_vector(0 to 1);
-			saidaMEM: out std_logic_vector(0 to 2);
-			saidaEX: out std_logic_vector(0 to 3);		
-			entradaPC: in std_logic_vector(0 to 31);
-			saidaPC: out std_logic_vector(0 to 31);
-			entrada_ReadData1: in std_logic_vector(0 to 31);
-			saida_ReadData1: out	std_logic_vector(0 to 31);
-			entrada_ReadData2: in std_logic_vector(0 to 31);
-			saida_ReadData2: out	std_logic_vector(0 to 31);
-			entrada_imed: in std_logic_vector(0 to 31);
-			saida_imed:	out	std_logic_vector(0 to 31);
-			entradaRT: in std_logic_vector(0 to 4);
-			saidaRT: out std_logic_vector(0 to 4);
-			entradaRD: in std_logic_vector(0 to 4);
-			saidaRD: out	std_logic_vector(0 to 4)
+				clock: in std_logic;
+				entradaWB: in std_logic_vector(0 to 1);
+				entradaMEM: in std_logic_vector(0 to 2);
+				entradaEX: in std_logic_vector(0 to 3);
+				saidaWB: out std_logic_vector(0 to 1);
+				saidaMEM: out std_logic_vector(0 to 2);
+				saidaEX: out std_logic_vector(0 to 3);		
+				entradaPC: in std_logic_vector(0 to 31);
+				saidaPC: out std_logic_vector(0 to 31);
+				entrada_ReadData1: in std_logic_vector(0 to 31);
+				saida_ReadData1: out	std_logic_vector(0 to 31);
+				entrada_ReadData2: in std_logic_vector(0 to 31);
+				saida_ReadData2: out	std_logic_vector(0 to 31);
+				entrada_imed: in std_logic_vector(0 to 31);
+				saida_imed:	out	std_logic_vector(0 to 31);
+				entradaRT: in std_logic_vector(0 to 4);
+				saidaRT: out std_logic_vector(0 to 4);
+				entradaRD: in std_logic_vector(0 to 4);
+				saidaRD: out	std_logic_vector(0 to 4)
 			 );
 			
 	end component;
+	
 	
 	-- Registrador EX/MEM
 		component EX_MEM is
 		
 		port(
-			clock:in std_logic;
-			entradaWB: in std_logic_vector(0 to 1);
-			entradaMEM: in std_logic_vector(0 to 2);
-			saidaWB: out std_logic_vector(0 to 1);
-			saidaMEM: out std_logic_vector(0 to 2);
-			entradaPC: in std_logic_vector(0 to 31);
-			saidaPC: out std_logic_vector(0 to 31);		
-			entradaZERO: in	std_logic;
-			saidaZERO: out std_logic;	
-			entradaResultado: in std_logic_vector(0 to 31);
-			saidaResultado:	out	std_logic_vector(0 to 31);
-			entrada_DadoWriteRegister: in std_logic_vector(0 to 31);
-			saida_DadoWriteRegister: out	std_logic_vector(0 to 31);
-			entrada_RegDST: in std_logic_vector(0 to 4);
-			saida_RegDST: out std_logic_vector(0 to 4)
+				clock:in std_logic;
+				entradaWB: in std_logic_vector(0 to 1);
+				entradaMEM: in std_logic_vector(0 to 2);
+				saidaWB: out std_logic_vector(0 to 1);
+				saidaMEM: out std_logic_vector(0 to 2);
+				entradaPC: in std_logic_vector(0 to 31);
+				saidaPC: out std_logic_vector(0 to 31);		
+				entradaZERO: in	std_logic;
+				saidaZERO: out std_logic;	
+				entradaResultado: in std_logic_vector(0 to 31);
+				saidaResultado:	out	std_logic_vector(0 to 31);
+				entrada_DadoWriteRegister: in std_logic_vector(0 to 31);
+				saida_DadoWriteRegister: out	std_logic_vector(0 to 31);
+				entrada_RegDST: in std_logic_vector(0 to 4);
+				saida_RegDST: out std_logic_vector(0 to 4)
 			);
 			
 	end component;
+	
 	
 	-- Registrador MEM/WB
 		component MEM_WB is
 		
 		port(
-			clock: in std_logic;
-			wbIn: in std_logic_vector(0 to 1);
-			wbOut: out std_logic_vector(0 to 1);		
-			rdIn: in std_logic_vector(0 to 31);
-			rdOut: out std_logic_vector(0 to 31);		
-			addrIn: in std_logic_vector(0 to 31);
-			addrOut: out std_logic_vector(0 to 31);				
-			redDstIn: in std_logic_vector(0 to 4);
-			redDstOut: out std_logic_vector(0 to 4)
-			);
+				clock: in std_logic;
+				wbIn: in std_logic_vector(0 to 1);
+				wbOut: out std_logic_vector(0 to 1);		
+				rdIn: in std_logic_vector(0 to 31);
+				rdOut: out std_logic_vector(0 to 31);		
+				addrIn: in std_logic_vector(0 to 31);
+				addrOut: out std_logic_vector(0 to 31);				
+				redDstIn: in std_logic_vector(0 to 4);
+				redDstOut: out std_logic_vector(0 to 4)
+			 );
 			
 	end component;
+	
 	
 	-- Declaração da Unidade de Controle, responsavel pelas "escolha" das operações.
 		component UnidadeControle is
 		
 		port(
-			opcode:	in std_logic_vector(0 to 5);
-			PCSrc: out std_logic;
-			SignalEX: out std_logic_vector(0 to 3);
-			SignalMEM: out std_logic_vector(0 to 2);
-			SignalWB: out std_logic_vector(0 to 1)
-			);
+				opcode:	in std_logic_vector(0 to 5);
+				PCSrc: out std_logic;
+				SignalEX: out std_logic_vector(0 to 3);
+				SignalMEM: out std_logic_vector(0 to 2);
+				SignalWB: out std_logic_vector(0 to 1)
+			 );
 			
 	end component;
 	
 	--------------------------------------------------------------------------------------------------
+	
+	
+	--------------------------------------------------------------------------------------------------
+	--------------------------------------------------------------------------------------------------
+	
 	
 	--------------------------------------------------------------------------------------------------
 	-- Fetch da Instrução
@@ -277,23 +298,23 @@ architecture components of CPU is
 	
 	signal PC_plus4:std_logic_vector(0 to 31); -- Sinal responsavel por receber o PC + 4
 	
-	signal RegWrite: std_logic; -- Sinal do RegWrite - Responsavel pelo controle de escrita ou não do registrador.
+	signal Sinal_regWrite: std_logic; -- Sinal do regWrite - Responsavel pelo controle de escrita ou não do registrador.
 	
 	signal instrucao: std_logic_vector(0 to 31); -- Responsavel por receber a instrução que será decoficada
 	
 	signal OPCode: std_logic_vector(0 to 5); -- Recebe o OPCode
 	
-	signal Read_Register_1: std_logic_vector(0 to 4); -- Responsavel por receber os bits correspondentes ao RS
+	signal ReadReg1: std_logic_vector(0 to 4); -- Responsavel por receber os bits correspondentes ao RS
 	
-	signal Read_Register_2: std_logic_vector(0 to 4); -- Responsavel por receber os bits correspondentes ao RT
+	signal ReadReg2: std_logic_vector(0 to 4); -- Responsavel por receber os bits correspondentes ao RT
 	
-	signal Write_Register: std_logic_vector(0 to 4); -- Responsavel por receber os bits correspondentes ao RD
+	signal WriteReg: std_logic_vector(0 to 4); -- Responsavel por receber os bits correspondentes ao RD
 	
-	signal Write_Data: std_logic_vector(0 to 31); -- Responsavel por receber os bits correspondentes a escrita, se necessario, após toda a operação
+	signal WriteDataReg: std_logic_vector(0 to 31); -- Responsavel por receber os bits correspondentes a escrita, se necessario, após toda a operação
 	
-	signal Read_Data_1: std_logic_vector(0 to 31); -- Saida dos dados do Registrador 1, correspondete ao RS
+	signal DataRead1: std_logic_vector(0 to 31); -- Saida dos dados do Registrador 1, correspondete ao RS
 	
-	signal Read_Data_2: std_logic_vector(0 to 31); -- Saida dos dados do Registrador 2, correspondete ao RT
+	signal DataRead2: std_logic_vector(0 to 31); -- Saida dos dados do Registrador 2, correspondete ao RT
 	
 	signal imed: std_logic_vector(0 to 15); -- Sinal Imediato para as operações
 	
@@ -302,9 +323,9 @@ architecture components of CPU is
 	--signal Jump_imed_x_quatro: std_logic_vector(0 to 31); -- ?
 	--signal JumpType: std_logic; -- ?
 	
-	signal Rt_ID: std_logic_vector(0 to 4); -- Entrada do RT no registrador ID
+	signal RegRt_ID: std_logic_vector(0 to 4); -- Entrada do RT no registrador ID
 	
-	signal Rd_ID: std_logic_vector(0 to 4); -- Entrada do RD no registrador ID
+	signal RegRd_ID: std_logic_vector(0 to 4); -- Entrada do RD no registrador ID
 	
 	signal verificaPC_0: std_logic_vector(0 to 31); -- ?
 	
@@ -328,17 +349,17 @@ architecture components of CPU is
 	
 	signal PC_plus4_EX: std_logic_vector(0 to 31); -- Pc mais 4 na etapa de execução
 	
-	signal imed_ext_x_quatro: std_logic_vector(0 to 31); -- ?
+	signal Imed_extend_4: std_logic_vector(0 to 31); -- ?
 	
-	signal Branch_addr: std_logic_vector(0 to 31); -- Calculo do Branch com a ajuda do somador responsavel
+	signal AddressBranch: std_logic_vector(0 to 31); -- Calculo do Branch com a ajuda do somador responsavel
 	
-	signal ULA_Src_A: std_logic_vector(0 to 31); -- Entrada A na ULA - Vem do Read_Data_1
+	signal SrcA_ULA: std_logic_vector(0 to 31); -- Entrada A na ULA - Vem do DataRead1
 	
-	signal ULA_Src_B: std_logic_vector(0 to 31); -- Entrada B da ULA - Depende do resultado do ALUSrc
+	signal SrcB_ULA: std_logic_vector(0 to 31); -- Entrada B da ULA - Depende do resultado do ALUSrc
 	
-	signal ULA_Resultado: std_logic_vector(0 to 31); -- Resultado da ULA
+	signal ResultadoULA: std_logic_vector(0 to 31); -- Resultado da ULA
 	
-	signal ULA_Zero: std_logic; -- Saida zero da ULA
+	signal Sinal_Zero: std_logic; -- Saida zero da ULA
 	
 	signal ALUSrc: std_logic; -- Controle da entrada B na ULA - Controle do Multiplexador
 	
@@ -372,15 +393,15 @@ architecture components of CPU is
 	
 	signal memWrite: std_logic; -- Sinal de controle representando o memWrite
 	
-	signal writeData_MEM: std_logic_vector(0 to 31); -- Entrada da memoria de dados, vem da saida do Read_Data_2, após passar por dois registradores(ID/EX e EX/MEM)
+	signal MEM_writeData: std_logic_vector(0 to 31); -- Entrada da memoria de dados, vem da saida do DataRead2, após passar por dois registradores(ID/EX e EX/MEM)
 	
 	signal memRead:	 std_logic;  -- Sinal de controle representando o memRead
 	
-	signal readData_MEM: std_logic_vector(0 to 31); -- Saida da memoria de dados || Entrada do registrador MEM/WB
+	signal MEM_readData: std_logic_vector(0 to 31); -- Saida da memoria de dados || Entrada do registrador MEM/WB
 	
-	signal andBranch_0: std_logic; -- Entrada 0 do AND responsavel por calcular se é um Branch ou não
+	signal andBranch0: std_logic; -- Entrada 0 do AND responsavel por calcular se é um Branch ou não
 	
-	signal andBranch_1: std_logic; -- Entrada 1 do AND responsavel por calcular se é um Branch ou não || Saida Zero da ULA
+	signal andBranch1: std_logic; -- Entrada 1 do AND responsavel por calcular se é um Branch ou não || Saida Zero da ULA
 	
 	signal regDst_MEM: std_logic_vector(0 to 4); -- Controle do multiplexador responsavel pela entrada de dados no registrador EX/MEM
 	
@@ -393,9 +414,9 @@ architecture components of CPU is
 	--------------------------------------------------------------------------------------------------
 	-- Sinais Writeback
 	
-	signal memtoReg_mux0: std_logic_vector(0 to 31); -- Entrada 0 do multiplexador responsavel pelo controle de Escrita no Registrador
+	signal MemToReg0: std_logic_vector(0 to 31); -- Entrada 0 do multiplexador responsavel pelo controle de Escrita no Registrador
 	
-	signal memtoReg_mux1: std_logic_vector(0 to 31); -- Entrada 1 do multiplexador responsavel pelo controle de Escrita no Registrador
+	signal MemToReg1: std_logic_vector(0 to 31); -- Entrada 1 do multiplexador responsavel pelo controle de Escrita no Registrador
 	
 	signal memToReg: std_logic;  -- Sinal de controle representando o memToReg
 	
@@ -434,19 +455,19 @@ begin
 	
 	--------------------------------------------------------------------------------------------------
 	-- Declaração das intruções de Decodificação
-	OPCode <= instrucao( 0 to  5);
+	OPCode <= instrucao(0 to 5);
 	
-	Read_Register_1	<= instrucao( 6 to 10);
+	ReadReg1	<= instrucao( 6 to 10);
 	
-	Read_Register_2	<= instrucao(11 to 15);
+	ReadReg2	<= instrucao(11 to 15);
 	
 	imed <= instrucao(16 to 31);
 	
-	Rt_ID <= instrucao(11 to 15);
+	RegRt_ID <= instrucao(11 to 15);
 	
-	Rd_ID <= instrucao(16 to 20);
+	RegRd_ID <= instrucao(16 to 20);
 	
-	Registradores: Registers port map (clock, RegWrite, Read_Register_1, Read_Register_2, Write_Register, Write_Data, Read_Data_1, Read_Data_2, SaidaReg1, SaidaReg2, SaidaReg3, SaidaReg4, SaidaReg5, SaidaReg6, SaidaReg7, SaidaReg8); -- OK
+	Registradores: Registers port map (clock, Sinal_regWrite, ReadReg1, ReadReg2, WriteReg, WriteDataReg, DataRead1, DataRead2, SaidaReg1, SaidaReg2, SaidaReg3, SaidaReg4, SaidaReg5, SaidaReg6, SaidaReg7, SaidaReg8); -- OK
 	
 	Sing_Extend: SignExtend	port map (imed, imed_extended_ID); -- OK
 	
@@ -463,24 +484,24 @@ begin
 	
 	Reg_ID_EX: ID_EX port map (clock, controle_WB_ID, controle_ME_ID, controle_EX_ID,
 								controle_WB_EX, controle_ME_EX, controle_EX_EX, 
-								PC_plus4, PC_plus4_EX, Read_Data_1, ULA_Src_A,
-								Read_Data_2, ALUScr_0, imed_extended_ID, imediate_extended_EX,
-								Rt_ID, regDst_0, Rd_ID, regDst_1); -- OK
+								PC_plus4, PC_plus4_EX, DataRead1, SrcA_ULA,
+								DataRead2, ALUScr_0, imed_extended_ID, imediate_extended_EX,
+								RegRt_ID, regDst_0, RegRd_ID, regDst_1); -- OK
  
 	--------------------------------------------------------------------------------------------------
 	
 	--------------------------------------------------------------------------------------------------
 	-- Componentes necessarios para a execução do programa
 	
-	CalculoBranch: AdderBranch	port map (PC_plus4_EX, imed_ext_x_quatro, Branch_addr); -- OK
+	CalculoBranch: AdderBranch	port map (PC_plus4_EX, Imed_extend_4, AddressBranch); -- OK
 	
-	ALU: ULA port map (ULA_Src_A, ULA_Src_B, ULA_Operation, ULA_Resultado, ULA_Zero); -- OK
+	ALU: ULA port map (SrcA_ULA, SrcB_ULA, ULA_Operation, ResultadoULA, Sinal_Zero); -- OK
 	
-	MuxALUSrc: Muxs_32bits	port map (ALUSrc, ALUScr_0, ALUScr_1, ULA_Src_B); -- OK
+	MuxALUSrc: Muxs_32bits	port map (ALUSrc, ALUScr_0, ALUScr_1, SrcB_ULA); -- OK
 	
 	Mux_RegDst:	MuxRegDst port map (RegDst, regDst_0, regDst_1, regDst_Saida); -- OK
 	
-	ShiftEX: ShiftLeft2	port map (imediate_extended_EX, imed_ext_x_quatro); -- OK
+	ShiftEX: ShiftLeft2	port map (imediate_extended_EX, Imed_extend_4); -- OK
 	
 	ALUScr_1 <= imediate_extended_EX;
 	
@@ -498,8 +519,8 @@ begin
 
 	Reg_EX_MEM:	EX_MEM	port map (clock, controle_WB_EX, controle_ME_EX,
 								controle_WB_ME, controle_ME_ME,
-								Branch_addr, PCSrc_1, ULA_Zero, andBranch_1,
-								ULA_Resultado, endereco_MEM, ALUScr_0, writeData_MEM,
+								AddressBranch, PCSrc_1, Sinal_Zero, andBranch1,
+								ResultadoULA, endereco_MEM, ALUScr_0, MEM_writeData,
 								regDst_Saida, regDst_MEM); -- OK
 												
 	--------------------------------------------------------------------------------------------------
@@ -507,32 +528,32 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Declaração dos componentes da Memoria de Dados
 	
-	Data_Memory: DataMemory port map (endereco_MEM, writeData_MEM, readData_MEM, clock, memWrite, memRead); -- OK
+	Data_Memory: DataMemory port map (endereco_MEM, MEM_writeData, MEM_readData, clock, memWrite, memRead); -- OK
 	
 	memWrite <= controle_ME_ME(0);
 	
 	memRead <= controle_ME_ME(1);
 	
-	andBranch_0 <= controle_ME_ME(2);
+	andBranch0 <= controle_ME_ME(2);
 	
-	SinalBranch <= andBranch_0 and andBranch_1;
+	SinalBranch <= andBranch0 and andBranch1;
 	
 	--------------------------------------------------------------------------------------------------
 	
 	--------------------------------------------------------------------------------------------------
 	-- Registrador MEM/WB
 	Reg_MEM_WB:	MEM_WB	port map (clock, controle_WB_ME, controle_WB_WB,
-								readData_MEM, memtoReg_mux1,
-								endereco_MEM, memtoReg_mux0, regDst_MEM, Write_Register); -- OK
+								MEM_readData, MemToReg1,
+								endereco_MEM, MemToReg0, regDst_MEM, WriteReg); -- OK
 	
 	--------------------------------------------------------------------------------------------------
 	
 	--------------------------------------------------------------------------------------------------
 	-- Declaração do funcionamento do WriteBack
 	
-	MuxMEMtoReg: MUXs_32bits port map (memToReg, memtoReg_mux0, memtoReg_mux1, Write_Data); -- OK
+	MuxMEMtoReg: MUXs_32bits port map (memToReg, MemToReg0, MemToReg1, WriteDataReg); -- OK
 	
 	memToReg <= controle_WB_WB(0);
-	RegWrite <= controle_WB_WB(1);
+	Sinal_regWrite <= controle_WB_WB(1);
 	
 end;
