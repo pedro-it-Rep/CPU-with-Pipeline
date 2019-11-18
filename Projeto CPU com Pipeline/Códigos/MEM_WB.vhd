@@ -7,19 +7,19 @@ entity MEM_WB is
 	port(
 			clock: in	std_logic;
 	
-			-- 32 bits para o sinal de WB
+			-- 2 bits para o sinal de controle WB
 			wbIn: in std_logic_vector(0 to 1);
 			wbOut: out	std_logic_vector(0 to 1) := "00";
 			
-			-- 32 bits para o  
-			rdIn: in std_logic_vector(0 to 31);
-			rdOut: out	std_logic_vector(0 to 31) := "00000000000000000000000000000000";
+			-- 32 bits para o  readData
+			readDataIn: in std_logic_vector(0 to 31);
+			readDataOut: out	std_logic_vector(0 to 31) := "00000000000000000000000000000000";
 			
-			-- 32 bits para o  
+			-- 32 bits para o  endereço
 			addrIn: in	std_logic_vector(0 to 31);
 			addrOut: out std_logic_vector(0 to 31) := "00000000000000000000000000000000";
 			
-			-- 4 bits para o  
+			-- 5 bits para o  RegDst
 			regDstIn: in std_logic_vector(0 to 4);
 			regDstOut: out	std_logic_vector(0 to 4) := "00000"
 		);
@@ -33,7 +33,7 @@ begin
 	begin
 		if (clock'event and clock = '1') then
 			wbOut <= wbIn;
-			rdOut <= rdIn;
+			readDataOut <= readDataIn;
 			addrOut <= addrIn;
 			regDstOut <= regDstIn;
 		end if;

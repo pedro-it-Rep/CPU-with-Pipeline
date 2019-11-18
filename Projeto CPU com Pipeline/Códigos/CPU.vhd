@@ -132,6 +132,14 @@ architecture components of CPU is
 	end component;
 	
 	
+	-- Declaração do shitf left 2, para o programa apenas é necessario mover 2 bits
+	component ShiftLeft2 is
+		
+		port(entradaSHL: in std_logic_vector(0 to 31);
+				saidaSHL: out std_logic_vector(0 to 31));
+				 
+	end component;
+	
 	
 	-- Declaração do sinal extendido, necessario para o bom funcionamento do pipeline
 	component SignExtend is
@@ -142,13 +150,6 @@ architecture components of CPU is
 	end component;
 	
 	
-	-- Declaração do shitf left 2, para o programa apenas é necessario mover 2 bits
-	component ShiftLeft2 is
-		
-		port(entradaSHL: in std_logic_vector(0 to 31);
-				saidaSHL: out std_logic_vector(0 to 31));
-				 
-	end component;
 	
 	
 	--------------------------------------------------------------------------------------------------
@@ -222,8 +223,8 @@ architecture components of CPU is
 		port(clock: in std_logic;
 				wbIn: in std_logic_vector(0 to 1);
 				wbOut: out std_logic_vector(0 to 1);		
-				rdIn: in std_logic_vector(0 to 31);
-				rdOut: out std_logic_vector(0 to 31);		
+				readDataIn: in std_logic_vector(0 to 31);
+				readDataOut: out std_logic_vector(0 to 31);		
 				addrIn: in std_logic_vector(0 to 31);
 				addrOut: out std_logic_vector(0 to 31);				
 				regDstIn: in std_logic_vector(0 to 4);
@@ -490,7 +491,7 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Registrador EX/MEM
 
-	Reg_EX_MEM:	EX_MEM	port map (clock, controle_WB_EX, controle_ME_EX,controle_WB_ME, controle_ME_ME,AddressBranch, PCSrc_1, Sinal_Zero, andBranch1,ResultadoULA, endereco_MEM, ALUScr_0, MEM_writeData,regDst_Saida, regDst_MEM); -- OK
+	Reg_EX_MEM:	EX_MEM port map (clock, controle_WB_EX, controle_ME_EX,controle_WB_ME, controle_ME_ME,AddressBranch, PCSrc_1, Sinal_Zero, andBranch1,ResultadoULA, endereco_MEM, ALUScr_0, MEM_writeData,regDst_Saida, regDst_MEM); -- OK
 												
 	--------------------------------------------------------------------------------------------------
 	
@@ -511,9 +512,7 @@ begin
 	
 	--------------------------------------------------------------------------------------------------
 	-- Registrador MEM/WB
-	Reg_MEM_WB:	MEM_WB	port map (clock, controle_WB_ME, controle_WB_WB,
-								MEM_readData, MemToReg1,
-								endereco_MEM, MemToReg0, regDst_MEM, WriteReg); -- OK
+	Reg_MEM_WB:	MEM_WB port map (clock, controle_WB_ME, controle_WB_WB, MEM_readData, MemToReg1,endereco_MEM, MemToReg0, regDst_MEM, WriteReg); -- OK
 	
 	--------------------------------------------------------------------------------------------------
 	
