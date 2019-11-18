@@ -249,6 +249,7 @@ architecture components of CPU is
 	--------------------------------------------------------------------------------------------------
 	--------------------------------------------------------------------------------------------------
 	
+	
 	signal deb_reg1: std_logic_vector(0 to 31);
 	--------------------------------------------------------------------------------------------------
 	-- Fetch da Instrução
@@ -303,9 +304,9 @@ architecture components of CPU is
 	
 	signal RegRd_ID: std_logic_vector(0 to 4); -- Entrada do RD no registrador ID
 	
-	signal verificaPC_0: std_logic_vector(0 to 31); -- ?
+	signal verificaPC_0: std_logic_vector(0 to 31); -- Entrada0 do mux de PCSrc
 	
-	signal verificaPC_1: std_logic_vector(0 to 31); -- ?
+	signal verificaPC_1: std_logic_vector(0 to 31); -- Entrada1 do mux de PCSrc
 	
 	signal SinalBranch: std_logic; -- Responsavel por indicar se a operação é um branch ou não
 	
@@ -325,7 +326,7 @@ architecture components of CPU is
 	
 	signal PC_plus4_EX: std_logic_vector(0 to 31); -- Pc mais 4 na etapa de execução
 	
-	signal Imed_extend_4: std_logic_vector(0 to 31); -- ?
+	signal Imed_extend_4: std_logic_vector(0 to 31); -- Usado para o calculo do Branch
 	
 	signal AddressBranch: std_logic_vector(0 to 31); -- Calculo do Branch com a ajuda do somador responsavel
 	
@@ -458,11 +459,7 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Registrador ID/EX
 	
-	Reg_ID_EX: ID_EX port map (clock, controle_WB_ID, controle_ME_ID, controle_EX_ID,
-								controle_WB_EX, controle_ME_EX, controle_EX_EX, 
-								PC_plus4, PC_plus4_EX, DataRead1, SrcA_ULA,
-								DataRead2, ALUScr_0, imed_extended_ID, imediate_extended_EX,
-								RegRt_ID, regDst_0, RegRd_ID, regDst_1); -- OK
+	Reg_ID_EX: ID_EX port map (clock, controle_WB_ID, controle_ME_ID, controle_EX_ID, controle_WB_EX, controle_ME_EX, controle_EX_EX, PC_plus4, PC_plus4_EX, DataRead1, SrcA_ULA,DataRead2, ALUScr_0, imed_extended_ID, imediate_extended_EX,RegRt_ID, regDst_0, RegRd_ID, regDst_1); -- OK
  
 	--------------------------------------------------------------------------------------------------
 	
@@ -493,11 +490,7 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Registrador EX/MEM
 
-	Reg_EX_MEM:	EX_MEM	port map (clock, controle_WB_EX, controle_ME_EX,
-								controle_WB_ME, controle_ME_ME,
-								AddressBranch, PCSrc_1, Sinal_Zero, andBranch1,
-								ResultadoULA, endereco_MEM, ALUScr_0, MEM_writeData,
-								regDst_Saida, regDst_MEM); -- OK
+	Reg_EX_MEM:	EX_MEM	port map (clock, controle_WB_EX, controle_ME_EX,controle_WB_ME, controle_ME_ME,AddressBranch, PCSrc_1, Sinal_Zero, andBranch1,ResultadoULA, endereco_MEM, ALUScr_0, MEM_writeData,regDst_Saida, regDst_MEM); -- OK
 												
 	--------------------------------------------------------------------------------------------------
 	
