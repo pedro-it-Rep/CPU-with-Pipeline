@@ -15,7 +15,7 @@ entity AdderBranch is
 end AdderBranch;
 
 -- Faz a soma dos valores que estão nas entradas, e fazem com que a saida receba esse valor
-architecture add of AdderBranch is
+architecture a of AdderBranch is
 begin
 	saidaAdder <= entrada1 + entrada2;
-end add;
+end;

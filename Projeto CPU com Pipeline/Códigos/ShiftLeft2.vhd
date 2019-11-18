@@ -6,8 +6,10 @@ use ieee.numeric_std.all;
 
 entity ShiftLeft2 is
 	-- Declaração das variaveis
-	port	(entradaSHL: in  std_logic_vector(0 to 31);
-			saidaSHL:	out std_logic_vector(0 to 31));
+	port(
+		entradaSHL: in  std_logic_vector(0 to 31);
+		saidaSHL:	out std_logic_vector(0 to 31)
+		);
 end ShiftLeft2;
 
 architecture sll2 of ShiftLeft2 is

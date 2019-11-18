@@ -69,4 +69,4 @@ begin
 						 inst(to_integer(unsigned(endereco)) +2)&
 						 inst(to_integer(unsigned(endereco)) +3); 
 	end process;
-end Instructions;
+end;

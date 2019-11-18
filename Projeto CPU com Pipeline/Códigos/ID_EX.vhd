@@ -46,7 +46,7 @@ begin
 	process(clock)
 	begin
 		-- Define que a saida recebe a entrada na subida do clock
-		if (clock'EVENT and clock = '1') then
+		if (clock'event and clock = '1') then
 			saidaWB <= entradaWB;
 			saidaMEM <= entradaMEM;
 			saidaEX <= entradaEX;
@@ -58,4 +58,4 @@ begin
 			saidaRD <= entradaRD;
 		end if;
 	end process;
-end IDEX; 
+end; 

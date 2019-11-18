@@ -9,10 +9,10 @@ entity MuxRegDst is
 		-- Sinal RegDst
 		regDst: in std_logic;
 		
-		-- Registrador rt (2º entrada)
+		-- Registrador rt 
 		regRt: in std_logic_vector(0 to 4);
 		
-		-- Registrador rd (1º entrada)
+		-- Registrador rd 
 		regRd: in std_logic_vector(0 to 4);
 		
 		-- Saída do mux
@@ -33,4 +33,4 @@ begin
 				saidaMux <= regRd;
 			end if;
 	end process;
-end muxReg;
+end;

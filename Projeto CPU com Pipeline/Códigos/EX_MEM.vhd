@@ -42,7 +42,7 @@ begin
 	process(clock)
 	-- Permite que a saida recebe os dados de entrada do Registrador. Isso só ocorre na subida do clock.
 	begin
-		if (clock'EVENT and clock = '1') then
+		if (clock'event and clock = '1') then
 			saidaWB	<= entradaWB;
 			saidaMEM <= entradaMEM;
 			saidaPC <= entradaPC;
@@ -52,4 +52,4 @@ begin
 			saida_RegDST <= entrada_RegDST;
 		end if;
 	end process;
-end EXMEM;
+end;

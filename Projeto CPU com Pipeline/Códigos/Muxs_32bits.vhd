@@ -33,4 +33,4 @@ begin
 			saidaMux32 <= entrada2;
 		end if;
 	end process;
-end mux32;
+end;

@@ -4,7 +4,8 @@ use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 
 entity MEM_WB is
-	port (clock: in	std_logic;
+	port(
+			clock: in	std_logic;
 	
 			-- 32 bits para o sinal de WB
 			wbIn: in std_logic_vector(0 to 1);
@@ -19,8 +20,9 @@ entity MEM_WB is
 			addrOut: out std_logic_vector(0 to 31) := "00000000000000000000000000000000";
 			
 			-- 4 bits para o  
-			redDstIn: in std_logic_vector(0 to 4);
-			redDstOut: out	std_logic_vector(0 to 4) := "00000");
+			regDstIn: in std_logic_vector(0 to 4);
+			regDstOut: out	std_logic_vector(0 to 4) := "00000"
+		);
 			
 end MEM_WB;
 
@@ -29,11 +31,11 @@ architecture MEMWB of MEM_WB is
 begin
 	process(clock)
 	begin
-		if (clock'EVENT and clock = '1') then
-			wbOut 	<= wbIn;
+		if (clock'event and clock = '1') then
+			wbOut <= wbIn;
 			rdOut <= rdIn;
 			addrOut <= addrIn;
-			redDstOut <= redDstIn;
+			regDstOut <= regDstIn;
 		end if;
 	end process;
-end MEMWB;
+end;

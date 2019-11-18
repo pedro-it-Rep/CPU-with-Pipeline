@@ -22,7 +22,7 @@ architecture IFID of IF_ID is
 begin
 	process(clock)
 		begin
-			if (clock'EVENT and clock = '1') then
+			if (clock'event and clock = '1') then
 				InstructionOut <= InstructionIn;
 				pcOut <= pcIn;
 			end if;

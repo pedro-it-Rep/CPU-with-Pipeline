@@ -5,11 +5,13 @@ use ieee.numeric_std.all;
 
 entity SignExtend is
 	-- Declaração de Variaveis
-	port	(entradaSE:	in  std_logic_vector(0 to 15);
-			saidaSE:	out std_logic_vector(0 to 31));
+	port(
+		entradaSE:	in  std_logic_vector(0 to 15);
+		saidaSE:	out std_logic_vector(0 to 31)
+		);
 end SignExtend;
 
-architecture ext of SignExtend is 
+architecture SignExt of SignExtend is 
 begin
 	process(entradaSE)
 	begin

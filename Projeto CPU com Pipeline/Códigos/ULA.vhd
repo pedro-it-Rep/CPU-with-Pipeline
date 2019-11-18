@@ -46,4 +46,4 @@ begin
 		
 		 aluResult <= conta;
 	end process;
-end UnidadeLogArit;
+end;
