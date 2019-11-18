@@ -6,14 +6,15 @@ use ieee.numeric_std.all;
 entity MuxRegDst is
 
 	port(
-		-- Sinal RegDst
-		regDst: in std_logic;
 		
 		-- Registrador rt 
 		regRt: in std_logic_vector(0 to 4);
 		
 		-- Registrador rd 
 		regRd: in std_logic_vector(0 to 4);
+		
+		-- Sinal RegDst
+		regDst: in std_logic;
 		
 		-- Saída do mux
 		saidaMux: out std_logic_vector(0 to 4)

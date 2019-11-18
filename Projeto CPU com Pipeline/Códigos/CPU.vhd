@@ -51,8 +51,9 @@ architecture components of CPU is
 	-- Declaração dos registradores usados pelo programa
 	component Registers
 	
-		port(clock: in std_logic;
+		port(
 				regWrite: in std_logic;
+				clock: in std_logic;
 				readRegister1: in std_logic_vector(0 to 4);
 				readRegister2: in std_logic_vector(0 to 4);
 				writeRegister: in std_logic_vector(0 to 4);
@@ -75,28 +76,16 @@ architecture components of CPU is
 	component DataMemory
 		
 		port(endereco: in std_logic_vector(0 to 31);
-				writeData: in std_logic_vector(0 to 31);
-				readData: out std_logic_vector(0 to 31);
 				clock: in std_logic;
 				memWrite: in std_logic;
+				writeData: in std_logic_vector(0 to 31);
 				memRead: in std_logic;
+				readData: out std_logic_vector(0 to 31);
 				mem1: out std_logic_vector(0 to 31);
 				mem2: out std_logic_vector(0 to 31);
 				mem3: out std_logic_vector(0 to 31);
 				mem4: out std_logic_vector(0 to 31));
 
-	end component;
-	
-	
-	-- Declaração da unidade Logica e Aritmetica, responsavel pelas operações necessarias durante o programa
-	component ULA is
-		
-		port(aluSrcA: in std_logic_vector(0 to 31);
-				aluSrcB: in std_logic_vector(0 to 31);
-				aluOp: in std_logic_vector(0 to  1);
-				aluResult: out std_logic_vector(0 to 31);
-				zero: out std_logic);
-				
 	end component;
 	
 	
@@ -113,9 +102,10 @@ architecture components of CPU is
 	-- Declaração do multiplexador de 32 bits de forma generica, para multiplos usos ao longo do programa
 	component Muxs_32bits is
 		
-		port(sinalControle: in std_logic;
+		port(
 				entrada1: in std_logic_vector(0 to 31);
 				entrada2: in std_logic_vector(0 to 31);
+				sinalControle: in std_logic;
 				saidaMux32: out std_logic_vector(0 to 31));
 				
 	end component;
@@ -124,20 +114,12 @@ architecture components of CPU is
 	-- Declaração do multiplexador usado para o controle do RegDst
 	component MuxRegDst is
 		
-		port(regDst: in std_logic;
+		port(
 				regRt: in std_logic_vector(0 to 4);
 				regRd: in std_logic_vector(0 to 4);
+				regDst: in std_logic;
 				saidaMux: out std_logic_vector(0 to 4));
 				
-	end component;
-	
-	
-	-- Declaração do shitf left 2, para o programa apenas é necessario mover 2 bits
-	component ShiftLeft2 is
-		
-		port(entradaSHL: in std_logic_vector(0 to 31);
-				saidaSHL: out std_logic_vector(0 to 31));
-				 
 	end component;
 	
 	
@@ -149,6 +131,24 @@ architecture components of CPU is
 				 
 	end component;
 	
+		-- Declaração do shitf left 2, para o programa apenas é necessario mover 2 bits
+	component ShiftLeft2 is
+		
+		port(entradaSHL: in std_logic_vector(0 to 31);
+				saidaSHL: out std_logic_vector(0 to 31));
+				 
+	end component;
+	
+		-- Declaração da unidade Logica e Aritmetica, responsavel pelas operações necessarias durante o programa
+	component ULA is
+		
+		port(aluSrcA: in std_logic_vector(0 to 31);
+				aluSrcB: in std_logic_vector(0 to 31);
+				aluOp: in std_logic_vector(0 to  1);
+				aluResult: out std_logic_vector(0 to 31);
+				zero: out std_logic);
+				
+	end component;
 	
 	
 	
@@ -238,9 +238,9 @@ architecture components of CPU is
 		
 		port(opcode:	in std_logic_vector(0 to 5);
 				PCSrc: out std_logic;
-				SignalEX: out std_logic_vector(0 to 3);
+				SignalWB: out std_logic_vector(0 to 1);
 				SignalMEM: out std_logic_vector(0 to 2);
-				SignalWB: out std_logic_vector(0 to 1));
+				SignalEX: out std_logic_vector(0 to 3));
 			
 	end component;
 	
@@ -418,7 +418,7 @@ begin
 	
 	PC4: AdderBranch port map (instrucaoPC, "00000000000000000000000000000100", PCSrc_0); -- OK
 	
-	MuxBranch: Muxs_32bits port map (SinalBranch, PCSrc_0, PCSrc_1, verificaPC_0); -- OK
+	MuxBranch: Muxs_32bits port map (PCSrc_0, PCSrc_1, SinalBranch, verificaPC_0); -- OK OK
 	
 	ProgramCounter:	PC	port map (clock, atualizaPC, instrucaoPC); -- OK
 	
@@ -445,15 +445,15 @@ begin
 	
 	RegRd_ID <= instrucao(16 to 20);
 	
-	Registradores: Registers port map (clock, Sinal_regWrite, ReadReg1, ReadReg2, WriteReg, WriteDataReg, DataRead1, DataRead2, deb_reg1, SaidaReg2, SaidaReg3, SaidaReg4, SaidaReg5, SaidaReg6, SaidaReg7, SaidaReg8); -- OK
+	Registradores: Registers port map (Sinal_regWrite, clock, ReadReg1, ReadReg2, WriteReg, WriteDataReg, DataRead1, DataRead2, deb_reg1, SaidaReg2, SaidaReg3, SaidaReg4, SaidaReg5, SaidaReg6, SaidaReg7, SaidaReg8); -- OK
 	
 	Sing_Extend: SignExtend	port map (imed, imed_extended_ID); -- OK
 	
-	MuxPCSrc: Muxs_32bits port map (PCSrc, verificaPC_0, verificaPC_1, atualizaPC); -- OK
+	MuxPCSrc: Muxs_32bits port map (verificaPC_0, verificaPC_1, PCSrc, atualizaPC); -- OK
 	
 	--shift_jump: ShiftLeft2 port map (instrucao, Jump_imed_x_quatro); -- OK
 	
-	ControlUnity: UnidadeControle port map (OPCode, PCSrc, controle_EX_ID, controle_ME_ID, controle_WB_ID); -- OK
+	ControlUnity: UnidadeControle port map (OPCode, PCSrc, controle_WB_ID, controle_ME_ID, controle_EX_ID); -- OK
 	
 	--------------------------------------------------------------------------------------------------
 	
@@ -471,9 +471,9 @@ begin
 	
 	ALU: ULA port map (SrcA_ULA, SrcB_ULA, ULA_Operation, ResultadoULA, Sinal_Zero); -- OK
 	
-	MuxALUSrc: Muxs_32bits	port map (ALUSrc, ALUScr_0, ALUScr_1, SrcB_ULA); -- OK
+	MuxALUSrc: Muxs_32bits	port map (ALUScr_0, ALUScr_1, ALUSrc, SrcB_ULA); -- OK
 	
-	Mux_RegDst:	MuxRegDst port map (RegDst, regDst_0, regDst_1, regDst_Saida); -- OK
+	Mux_RegDst:	MuxRegDst port map (regDst_0, regDst_1, RegDst, regDst_Saida); -- OK
 	
 	ShiftEX: ShiftLeft2	port map (imediate_extended_EX, Imed_extend_4); -- OK
 	
@@ -498,7 +498,7 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Declaração dos componentes da Memoria de Dados
 	
-	Data_Memory: DataMemory port map (endereco_MEM, MEM_writeData, MEM_readData, clock, memWrite, memRead, SaidaMem1, SaidaMem2, SaidaMem3, SaidaMem4); -- OK
+	Data_Memory: DataMemory port map (endereco_MEM, clock, memWrite, MEM_writeData, memRead, MEM_readData, SaidaMem1, SaidaMem2, SaidaMem3, SaidaMem4); -- OK
 	
 	memWrite <= controle_ME_ME(0);
 	
@@ -519,7 +519,7 @@ begin
 	--------------------------------------------------------------------------------------------------
 	-- Declaração do funcionamento do WriteBack
 	
-	MuxMEMtoReg: MUXs_32bits port map (memToReg, MemToReg0, MemToReg1, WriteDataReg); -- OK
+	MuxMEMtoReg: MUXs_32bits port map (MemToReg0, MemToReg1, memToReg, WriteDataReg); -- OK
 	
 	memToReg <= controle_WB_WB(0);
 	Sinal_regWrite <= controle_WB_WB(1);

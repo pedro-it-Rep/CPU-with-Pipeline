@@ -7,8 +7,8 @@ entity Registers is
 
 	port(
 		-- Clock e sinal de RegWrite
-		clock: in std_logic;
 		regWrite: in std_logic;
+		clock: in std_logic;
 		
 		-- Entradas dos registradores que serão lidos
 		readRegister1: in std_logic_vector(0 to 4);
@@ -40,7 +40,7 @@ end Registers;
 architecture registrador of Registers is
 
 	-- 10 registradores de 32 bits
-	type RegArray is array (0 to 9) of std_logic_vector(0 to 31);
+	type RegArray is array (0 to 31) of std_logic_vector(0 to 31);
 	signal Testereg: RegArray;
 	
 	begin

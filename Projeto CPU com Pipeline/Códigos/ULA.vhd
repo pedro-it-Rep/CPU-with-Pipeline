@@ -30,11 +30,11 @@ begin
 	begin
 		case aluOp is
 			
-			when "00" => aluResult <= aluSrcA + aluSrcB;
-			when "01" => aluResult <= aluSrcA - aluSrcB;
-			when "10" => aluResult <= aluSrcA and aluSrcB;
-			when "11" => aluResult <= aluSrcA or aluSrcB;
-			when others => aluResult <= "00000000000000000000000000000000";
+			when "00" => conta <= aluSrcA + aluSrcB;
+			when "01" => conta <= aluSrcA - aluSrcB;
+			when "10" => conta <= aluSrcA and aluSrcB;
+			when "11" => conta <= aluSrcA or aluSrcB;
+			when others => conta <= "00000000000000000000000000000000";
 			
 		end case;
 		

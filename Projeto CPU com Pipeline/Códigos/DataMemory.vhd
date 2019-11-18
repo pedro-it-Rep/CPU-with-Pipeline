@@ -8,15 +8,13 @@ entity DataMemory is
 	port(
 		-- Entradas da memória
 		endereco: in std_logic_vector(0 to 31);
+		clock: in std_logic;
+		memWrite: in std_logic;
 		writeData: in std_logic_vector(0 to 31);
+		memRead: in std_logic;
 		
 		-- Saída da memória
 		readData: out std_logic_vector(0 to 31);
-		
-		-- Sinais de controle
-		clock: in std_logic;
-		memWrite: in std_logic;
-		memRead: in std_logic;
 		
 		mem1: out std_logic_vector(0 to 31);
 		mem2: out std_logic_vector(0 to 31);
@@ -27,7 +25,7 @@ entity DataMemory is
 end DataMemory;
 
 architecture Data of DataMemory is
-	type memoria is array (0 to 63) of std_logic_vector(0 to 7);
+	type memoria is array (0 to 100) of std_logic_vector(0 to 7);
 	signal memory: memoria;
 begin
 

@@ -6,14 +6,15 @@ use ieee.numeric_std.all;
 entity Muxs_32bits is
 
 	port(
-		-- Sinal de cotrole do mux 
-		sinalControle: in  std_logic;
 		
 		-- 1º entrada do mux
 		entrada1: in  std_logic_vector(0 to 31);
 		
 		-- 2º entrada do registrador
 		entrada2: in  std_logic_vector(0 to 31);
+		
+		-- Sinal de cotrole do mux 
+		sinalControle: in  std_logic;
 		
 		-- Saída do mux
 		saidaMux32: out std_logic_vector(0 to 31)

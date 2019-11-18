@@ -19,7 +19,7 @@ end InstructionMemory;
 
 architecture Instructions of InstructionMemory is
 	
-	type instrucoes is array (0 to 447) of std_logic_vector(0 to 7);
+	type instrucoes is array (0 to 384) of std_logic_vector(0 to 7);
 	signal inst: instrucoes;
 	
 begin	
