@@ -6,8 +6,8 @@ use ieee.numeric_std.all;
 -- Declaração das variaveis no CPU
 entity CPU is
 	port(clock: in std_logic; -- Controle das instruções
-			pcAtual: out std_logic_vector(0 to 31); -- Responasel por mostrar o PC Atual
-			instrucAtual: out std_logic_vector(0 to 31); -- Contem a instrução que será executada
+			pcAtual: out std_logic_vector(0 to 31); -- Responsável por mostrar o PC Atual
+			instrucAtual: out std_logic_vector(0 to 31); -- Conté	m a instrução que será executada
 			SaidaReg1: out std_logic_vector(0 to 31);
 			SaidaReg2: out std_logic_vector(0 to 31);
 			SaidaReg3: out std_logic_vector(0 to 31);
@@ -51,8 +51,7 @@ architecture components of CPU is
 	-- Declaração dos registradores usados pelo programa
 	component Registers
 	
-		port(
-				regWrite: in std_logic;
+		port(regWrite: in std_logic;
 				clock: in std_logic;
 				readRegister1: in std_logic_vector(0 to 4);
 				readRegister2: in std_logic_vector(0 to 4);
@@ -102,8 +101,7 @@ architecture components of CPU is
 	-- Declaração do multiplexador de 32 bits de forma generica, para multiplos usos ao longo do programa
 	component Muxs_32bits is
 		
-		port(
-				entrada1: in std_logic_vector(0 to 31);
+		port(entrada1: in std_logic_vector(0 to 31);
 				entrada2: in std_logic_vector(0 to 31);
 				sinalControle: in std_logic;
 				saidaMux32: out std_logic_vector(0 to 31));
@@ -114,8 +112,7 @@ architecture components of CPU is
 	-- Declaração do multiplexador usado para o controle do RegDst
 	component MuxRegDst is
 		
-		port(
-				regRt: in std_logic_vector(0 to 4);
+		port(regRt: in std_logic_vector(0 to 4);
 				regRd: in std_logic_vector(0 to 4);
 				regDst: in std_logic;
 				saidaMux: out std_logic_vector(0 to 4));

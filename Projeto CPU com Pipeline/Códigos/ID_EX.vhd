@@ -36,8 +36,7 @@ entity ID_EX is
 			entradaRT: in std_logic_vector(0 to 4);
 			saidaRT: out std_logic_vector(0 to 4) := "00000";
 			entradaRD: in std_logic_vector(0 to 4);
-			saidaRD: out std_logic_vector(0 to 4) := "00000"
-			);
+			saidaRD: out std_logic_vector(0 to 4) := "00000");
 end ID_EX;
 
 architecture IDEX of ID_EX is

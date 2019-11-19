@@ -17,11 +17,11 @@ entity UnidadeControle is
 		-- Sinal de controle para o estágio de WB
 		SignalWB: out std_logic_vector(0 to 1) := "00";
 		
-		-- Sinal de controle para o estáio de EX
-		SignalEX: out std_logic_vector(0 to 3) := "0000";
-		
 		-- Sinal de controle para o estágio de MEM
-		SignalMEM: out std_logic_vector(0 to 2) := "000"
+		SignalMEM: out std_logic_vector(0 to 2) := "000";
+		
+		-- Sinal de controle para o estáio de EX
+		SignalEX: out std_logic_vector(0 to 3) := "0000"
 		
 		);
 		
@@ -69,7 +69,7 @@ begin
 			when "000100" => 
 				PCSrc <= '0';
 				SignalEX <= "1010";
-				SignalMEM	<= "0X0";
+				SignalMEM <= "0X0";
 				SignalWB <= "01";
 			
 			
@@ -116,7 +116,7 @@ begin
 			when "001010" => 
 				PCSrc <= '0';
 				SignalEX <= "1110";
-				SignalMEM	<= "0X0";
+				SignalMEM <= "0X0";
 				SignalWB <= "01";
 			
 			
@@ -124,7 +124,7 @@ begin
 			when "001011" => 
 				PCSrc <= '0';
 				SignalEX <= "001X";
-				SignalMEM	<= "0X1";
+				SignalMEM <= "0X1";
 				SignalWB <= "00";
 			
 			
@@ -132,7 +132,7 @@ begin
 			when others => 
 				PCSrc <= '0';
 				SignalEX <= "XXXX";
-				SignalMEM	<= "0X0";
+				SignalMEM <= "0X0";
 				SignalWB <= "00";
 
 		end case;

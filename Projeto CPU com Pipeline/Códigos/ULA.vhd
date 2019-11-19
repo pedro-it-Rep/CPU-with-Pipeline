@@ -12,8 +12,8 @@ entity ULA is
 		-- Segundo registrador que entra na ULA
 		aluSrcB: in std_logic_vector(0 to 31);
 		
-		-- Operação feita pela ULA (add, sub, and e or)
-		aluOp:	in std_logic_vector(0 to  1);
+		-- Operação feita pela ULA (add, sub, and ou or)
+		aluOp:	in std_logic_vector(0 to 1);
 		
 		-- Saída da ULA
 		aluResult: out std_logic_vector(0 to 31);

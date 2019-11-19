@@ -5,8 +5,7 @@ use ieee.numeric_std.all;
 
 entity EX_MEM is
 
-	port (
-			clock: in std_logic;
+	port (clock: in std_logic;
 			
 			-- Declaração da Entrada e Saida do WB e ME
 			entradaWB: in std_logic_vector(0 to 1);
