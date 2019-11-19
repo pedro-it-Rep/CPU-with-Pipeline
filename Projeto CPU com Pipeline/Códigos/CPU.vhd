@@ -7,7 +7,7 @@ use ieee.numeric_std.all;
 entity CPU is
 	port(clock: in std_logic; -- Controle das instruções
 			pcAtual: out std_logic_vector(0 to 31); -- Responsável por mostrar o PC Atual
-			instrucAtual: out std_logic_vector(0 to 31); -- Conté	m a instrução que será executada
+			instrucAtual: out std_logic_vector(0 to 31); -- Contém a instrução que será executada
 			SaidaReg1: out std_logic_vector(0 to 31);
 			SaidaReg2: out std_logic_vector(0 to 31);
 			SaidaReg3: out std_logic_vector(0 to 31);
