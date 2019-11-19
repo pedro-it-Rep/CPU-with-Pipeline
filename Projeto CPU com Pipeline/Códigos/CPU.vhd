@@ -19,7 +19,13 @@ entity CPU is
 			SaidaMem1: out std_logic_vector(0 to 31);
 			SaidaMem2: out std_logic_vector(0 to 31);
 			SaidaMem3: out std_logic_vector(0 to 31);
-			SaidaMem4: out std_logic_vector(0 to 31));
+			SaidaMem4: out std_logic_vector(0 to 31);
+			
+			debug_ULA0: out std_logic_vector(0 to 31);
+			debug_ULA1: out std_logic_vector(0 to 31);
+			debug_ULAOut: out std_logic_vector(0 to 31)
+			);
+			
 			
 end CPU;
 
@@ -468,6 +474,10 @@ begin
 	
 	ALU: ULA port map (SrcA_ULA, SrcB_ULA, ULA_Operation, ResultadoULA, Sinal_Zero); -- OK
 	
+	debug_ULA0 <= SrcA_ULA;
+	debug_ULA1 <= SrcB_ULA;
+	debug_ULAOut <= ResultadoULA;
+	
 	MuxALUSrc: Muxs_32bits	port map (ALUScr_0, ALUScr_1, ALUSrc, SrcB_ULA); -- OK
 	
 	Mux_RegDst:	MuxRegDst port map (regDst_0, regDst_1, RegDst, regDst_Saida); -- OK
@@ -517,6 +527,9 @@ begin
 	-- Declaração do funcionamento do WriteBack
 	
 	MuxMEMtoReg: MUXs_32bits port map (MemToReg0, MemToReg1, memToReg, WriteDataReg); -- OK
+	--debug_MemtoReg0 <= MemToReg0;
+	--debug_MemtoReg1 <= MemToReg1;
+	--debug_MemtoRegSig <= memToReg;
 	
 	memToReg <= controle_WB_WB(0);
 	Sinal_regWrite <= controle_WB_WB(1);
