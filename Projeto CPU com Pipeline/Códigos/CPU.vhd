@@ -8,6 +8,7 @@ entity CPU is
 	port(clock: in std_logic; -- Controle das instruções
 			pcAtual: out std_logic_vector(0 to 31); -- Responsável por mostrar o PC Atual
 			instrucAtual: out std_logic_vector(0 to 31); -- Contém a instrução que será executada
+			SaidaReg0: out std_logic_vector(0 to 31);
 			SaidaReg1: out std_logic_vector(0 to 31);
 			SaidaReg2: out std_logic_vector(0 to 31);
 			SaidaReg3: out std_logic_vector(0 to 31);
@@ -15,15 +16,16 @@ entity CPU is
 			SaidaReg5: out std_logic_vector(0 to 31);
 			SaidaReg6: out std_logic_vector(0 to 31);
 			SaidaReg7: out std_logic_vector(0 to 31);
-			SaidaReg8: out std_logic_vector(0 to 31);
 			SaidaMem1: out std_logic_vector(0 to 31);
 			SaidaMem2: out std_logic_vector(0 to 31);
 			SaidaMem3: out std_logic_vector(0 to 31);
 			SaidaMem4: out std_logic_vector(0 to 31);
 			
-			debug_ULA0: out std_logic_vector(0 to 31);
-			debug_ULA1: out std_logic_vector(0 to 31);
-			debug_ULAOut: out std_logic_vector(0 to 31)
+		--	debug_ULA0: out std_logic_vector(0 to 31);
+		--	debug_ULA1: out std_logic_vector(0 to 31);
+			debug_ULAOut: out std_logic_vector(0 to 31);
+			debug_AddrDM: out std_logic_vector(0 to 31);
+			debug_WriteDataDM: out std_logic_vector(0 to 31)
 			);
 			
 			
@@ -448,7 +450,7 @@ begin
 	
 	RegRd_ID <= instrucao(16 to 20);
 	
-	Registradores: Registers port map (Sinal_regWrite, clock, ReadReg1, ReadReg2, WriteReg, WriteDataReg, DataRead1, DataRead2, deb_reg1, SaidaReg2, SaidaReg3, SaidaReg4, SaidaReg5, SaidaReg6, SaidaReg7, SaidaReg8); -- OK
+	Registradores: Registers port map (Sinal_regWrite, clock, ReadReg1, ReadReg2, WriteReg, WriteDataReg, DataRead1, DataRead2, deb_reg1, SaidaReg1, SaidaReg2, SaidaReg3, SaidaReg4, SaidaReg5, SaidaReg6, SaidaReg7); -- OK
 	
 	Sing_Extend: SignExtend	port map (imed, imed_extended_ID); -- OK
 	
@@ -474,8 +476,8 @@ begin
 	
 	ALU: ULA port map (SrcA_ULA, SrcB_ULA, ULA_Operation, ResultadoULA, Sinal_Zero); -- OK
 	
-	debug_ULA0 <= SrcA_ULA;
-	debug_ULA1 <= SrcB_ULA;
+	--debug_ULA0 <= SrcA_ULA;
+	--debug_ULA1 <= SrcB_ULA;
 	debug_ULAOut <= ResultadoULA;
 	
 	MuxALUSrc: Muxs_32bits	port map (ALUScr_0, ALUScr_1, ALUSrc, SrcB_ULA); -- OK
@@ -514,6 +516,9 @@ begin
 	andBranch0 <= controle_ME_ME(2);
 	
 	SinalBranch <= andBranch0 and andBranch1;
+	
+	debug_AddrDM <= endereco_MEM;
+	debug_WriteDataDM <= MEM_writeData;
 	
 	--------------------------------------------------------------------------------------------------
 	
