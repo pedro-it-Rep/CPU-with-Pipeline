@@ -12,7 +12,7 @@ entity UnidadeControle is
 		-- Sinal de PCSrc
 		PCSrc: out std_logic := '0';
 		
-		-- jmptp:	out std_logic := '0';
+		jumpSignal:	out std_logic := '0';
 		
 		-- Sinal de controle para o estágio de WB
 		SignalWB: out std_logic_vector(0 to 1) := "00";
@@ -126,6 +126,25 @@ begin
 				SignalEX <= "001X";
 				SignalMEM <= "0X1";
 				SignalWB <= "00";
+				
+			
+			-- Jump
+			when "001100" =>
+				pcsrc			<= '1';
+				jumpSignal	<= '0';
+				ex				<= "XXXX";
+				mem			<= "0XX";
+				wb				<= "00";
+				
+
+			-- Jump Register	
+			when "001101" =>
+				pcsrc			<= '1';
+				jumpSignal	<= '1';
+				ex				<= "XXXX";
+				mem			<= "0XX";
+				wb				<= "00";
+
 			
 			
 			-- OTHERS

@@ -19,7 +19,7 @@ entity CPU is
 			SaidaMem1: out std_logic_vector(0 to 31);
 			SaidaMem2: out std_logic_vector(0 to 31);
 			SaidaMem3: out std_logic_vector(0 to 31);
-			SaidaMem4: out std_logic_vector(0 to 31);
+			SaidaMem4: out std_logic_vector(0 to 31)
 			
 		--	debug_ULA0: out std_logic_vector(0 to 31);
 		--	debug_ULA1: out std_logic_vector(0 to 31);
@@ -29,10 +29,10 @@ entity CPU is
 		--	debug_MemRead:out std_logic;
 		--	debug_MemWrite:out std_logic;
 		--	debug_AddBranch:out std_logic_vector(0 to 31);
-			debug_BranchSig:out std_logic;
-			debug_PCSrc: out std_logic_vector(0 to 31)
-			--debug_branch:out std_logic;
-			--debug_Zero:out std_logic
+		--	debug_BranchSig:out std_logic;
+		--	debug_PCSrc: out std_logic_vector(0 to 31)
+		--debug_branch:out std_logic;
+		--debug_Zero:out std_logic
 			);
 			
 			
@@ -250,6 +250,7 @@ architecture components of CPU is
 		
 		port(opcode:	in std_logic_vector(0 to 5);
 				PCSrc: out std_logic;
+				jumpSignal:	out std_logic := '0';
 				SignalWB: out std_logic_vector(0 to 1);
 				SignalMEM: out std_logic_vector(0 to 2);
 				SignalEX: out std_logic_vector(0 to 3));
@@ -310,12 +311,20 @@ architecture components of CPU is
 	
 	signal imed_extended_ID: std_logic_vector(0 to 31); -- Imediato extendido para operação
 	
-	--signal Jump_imed_x_quatro: std_logic_vector(0 to 31); -- ?
-	--signal JumpType: std_logic; -- ?
-	
 	signal RegRt_ID: std_logic_vector(0 to 4); -- Entrada do RT no registrador ID
 	
 	signal RegRd_ID: std_logic_vector(0 to 4); -- Entrada do RD no registrador ID
+	
+	-- ------------------------------------------------------------------------------------------------------------------------
+	
+	--Sinais do Jump
+	signal jump_imediate4: std_logic_vector(0 to 31);
+	
+	signal Concatenat_Jump:	std_logic_vector(0 to 31);
+	
+	signal InstJumpType:	std_logic;
+	
+	-- ------------------------------------------------------------------------------------------------------------------------
 	
 	signal verificaPC_0: std_logic_vector(0 to 31); -- Entrada0 do mux de PCSrc
 	
@@ -461,13 +470,30 @@ begin
 	
 	Sing_Extend: SignExtend	port map (imed, imed_extended_ID); -- OK
 	
+	-- ------------------------------------------------------------------------------------------------------------------------
+	
+	MuxJumpType: Muxs_32bits port map (Concatenat_Jump, DataRead1, InstJumpType, verificaPC_1); -- MUX Jump
+	
+	-- ------------------------------------------------------------------------------------------------------------------------
+	
 	MuxPCSrc: Muxs_32bits port map (verificaPC_0, verificaPC_1, PCSrc, atualizaPC); -- OK
 	
-	debug_PCSrc <= atualizaPC;
+	--debug_PCSrc <= atualizaPC;
 	
-	--shift_jump: ShiftLeft2 port map (instrucao, Jump_imed_x_quatro); -- OK
+	-- ------------------------------------------------------------------------------------------------------------------------
 	
-	ControlUnity: UnidadeControle port map (OPCode, PCSrc, controle_WB_ID, controle_ME_ID, controle_EX_ID); -- OK
+	ShiftLeftpJump: ShiftLeft2 port map (instrucao, jump_imediate4); -- Shift Left usado para a instrução jump
+	
+	-- ------------------------------------------------------------------------------------------------------------------------
+	
+
+	-- ------------------------------------------------------------------------------------------------------------------------
+	
+	Concatenat_Jump <= PC_plus4(0 to 3) & jump_imediate4(4 to 31); -- Concatenação do PC+4 com o imediato necessario para o jump
+	
+	-- ------------------------------------------------------------------------------------------------------------------------
+	
+	ControlUnity: UnidadeControle port map (OPCode, PCSrc, InstJumpType, controle_WB_ID, controle_ME_ID, controle_EX_ID); -- OK
 	
 	--------------------------------------------------------------------------------------------------
 	
