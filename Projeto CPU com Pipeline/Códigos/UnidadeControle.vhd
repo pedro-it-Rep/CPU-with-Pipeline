@@ -120,7 +120,7 @@ begin
 				SignalWB <= "01";
 			
 			
-			-- BEQ	
+			-- BEQ	verificar se PCSrc nao deve ser 1
 			when "001011" => 
 				PCSrc <= '0';
 				SignalEX <= "001X";

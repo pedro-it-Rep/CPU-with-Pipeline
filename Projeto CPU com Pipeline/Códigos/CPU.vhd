@@ -23,9 +23,16 @@ entity CPU is
 			
 		--	debug_ULA0: out std_logic_vector(0 to 31);
 		--	debug_ULA1: out std_logic_vector(0 to 31);
-			debug_ULAOut: out std_logic_vector(0 to 31);
-			debug_AddrDM: out std_logic_vector(0 to 31);
-			debug_WriteDataDM: out std_logic_vector(0 to 31)
+		--	debug_ULAOut: out std_logic_vector(0 to 31);
+		--	debug_AddrDM: out std_logic_vector(0 to 31);
+		--	debug_WriteDataDM: out std_logic_vector(0 to 31);
+		--	debug_MemRead:out std_logic;
+		--	debug_MemWrite:out std_logic;
+		--	debug_AddBranch:out std_logic_vector(0 to 31);
+			debug_BranchSig:out std_logic;
+			debug_PCSrc: out std_logic_vector(0 to 31)
+			--debug_branch:out std_logic;
+			--debug_Zero:out std_logic
 			);
 			
 			
@@ -456,6 +463,8 @@ begin
 	
 	MuxPCSrc: Muxs_32bits port map (verificaPC_0, verificaPC_1, PCSrc, atualizaPC); -- OK
 	
+	debug_PCSrc <= atualizaPC;
+	
 	--shift_jump: ShiftLeft2 port map (instrucao, Jump_imed_x_quatro); -- OK
 	
 	ControlUnity: UnidadeControle port map (OPCode, PCSrc, controle_WB_ID, controle_ME_ID, controle_EX_ID); -- OK
@@ -474,11 +483,14 @@ begin
 	
 	CalculoBranch: AdderBranch	port map (PC_plus4_EX, Imed_extend_4, AddressBranch); -- OK
 	
+	--debug_AddBranch <= AddressBranch;
+	
 	ALU: ULA port map (SrcA_ULA, SrcB_ULA, ULA_Operation, ResultadoULA, Sinal_Zero); -- OK
 	
 	--debug_ULA0 <= SrcA_ULA;
 	--debug_ULA1 <= SrcB_ULA;
-	debug_ULAOut <= ResultadoULA;
+	--debug_ULAOut <= ResultadoULA;
+	--debug_Zero <= Sinal_Zero;
 	
 	MuxALUSrc: Muxs_32bits	port map (ALUScr_0, ALUScr_1, ALUSrc, SrcB_ULA); -- OK
 	
@@ -515,10 +527,16 @@ begin
 	
 	andBranch0 <= controle_ME_ME(2);
 	
+	--debug_branch <= andBranch0;
+	
 	SinalBranch <= andBranch0 and andBranch1;
 	
-	debug_AddrDM <= endereco_MEM;
-	debug_WriteDataDM <= MEM_writeData;
+	--debug_BranchSig <= SinalBranch;
+	
+	--debug_AddrDM <= endereco_MEM;
+	--debug_WriteDataDM <= MEM_writeData;
+	--debug_MemRead <= memRead;
+	--debug_MemWrite <= memWrite;
 	
 	--------------------------------------------------------------------------------------------------
 	
