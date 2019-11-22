@@ -130,20 +130,20 @@ begin
 			
 			-- Jump
 			when "001100" =>
-				pcsrc			<= '1';
+				PCSrc			<= '1';
 				jumpSignal	<= '0';
-				ex				<= "XXXX";
-				mem			<= "0XX";
-				wb				<= "00";
+				SignalEX				<= "XXXX";
+				SignalMEM			<= "0XX";
+				SignalWB				<= "00";
 				
 
 			-- Jump Register	
 			when "001101" =>
 				pcsrc			<= '1';
 				jumpSignal	<= '1';
-				ex				<= "XXXX";
-				mem			<= "0XX";
-				wb				<= "00";
+				SignalEX		<= "XXXX";
+				SignalMEM	<= "0XX";
+				SignalWB		<= "00";
 
 			
 			
